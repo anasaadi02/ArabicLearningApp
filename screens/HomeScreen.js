@@ -8,6 +8,6 @@ export default function HomeScreen() {
     </View>
   );
 }
-/*hell*/
+/*hello*/
 
 const styles = StyleSheet.create({});
