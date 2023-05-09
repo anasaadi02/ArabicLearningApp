@@ -1,18 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { auth } from '../firebase';
+import { signOut, onAuthStateChanged } from 'firebase/auth';
+import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen() {
   const [fullname, setFullname] = useState('');
   const [datetime, setDatetime] = useState('');
   const [vehicleType, setVehicleType] = useState('');
 
+  const tologinnavigation = useNavigation();
+  
+
   function handleReservation() {
     // TODO: Add reservation logic here
-  }
+  };
+
+  function logout() {
+    return signOut(auth);
+  };
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, user => {
+      if (!user) {
+        tologinnavigation.navigate("Login");
+      }
+    })
+    return unsub;
+  }, []);
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <Text style={styles.head}>Reservation</Text>
+      <Text>Current user: {auth.currentUser?.email}</Text>
       <View style={styles.formContainer}>
         <TextInput
           placeholder="Fullname"
@@ -47,6 +67,9 @@ export default function HomeScreen() {
       </View>
       <TouchableOpacity onPress={handleReservation} style={styles.button}>
         <Text style={styles.buttonText}>Make Reservation</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={logout} style={[styles.button, styles.buttonOutline]}>
+        <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );
@@ -126,5 +149,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '700',
     fontSize: 16,
+  },
+
+  buttonOutline: {
+    backgroundColor: 'red',
+    marginTop: 20,
+    borderColor: 'white',
+    borderWidth: 2,
   },
 });

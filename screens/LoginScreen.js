@@ -25,7 +25,8 @@ export default function LoginScreen() {
 
   function handleLogin() {
     signInWithEmailAndPassword(auth, email, password)
-    .then(console.log());
+    .then(console.log("yes"));
+    navigation.navigate("Home")
   }
 
   useEffect(() => {
@@ -36,7 +37,6 @@ export default function LoginScreen() {
     })
     return unsub;
   }, [])
-  
   
 
   return (
@@ -60,7 +60,7 @@ export default function LoginScreen() {
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-         onPress={() => handleLogin}
+         onPress={() => handleLogin()}
          style={styles.button}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
