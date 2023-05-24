@@ -24,8 +24,7 @@ export default function LoginScreen() {
   }
 
   function handleLogin() {
-    signInWithEmailAndPassword(auth, email, password)
-    .then(console.log("yes"));
+    signInWithEmailAndPassword(auth, email, password);
     navigation.navigate("Home")
   }
 

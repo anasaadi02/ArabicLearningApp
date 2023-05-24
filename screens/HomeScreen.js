@@ -1,16 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { auth } from '../firebase';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigation } from "@react-navigation/native";
+import DateTimePicker from '@react-native-community/datetimepicker';
+
+
+
 
 export default function HomeScreen() {
   const [fullname, setFullname] = useState('');
-  const [datetime, setDatetime] = useState('');
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+  const [text, setText] = useState('Empty')
   const [vehicleType, setVehicleType] = useState('');
 
   const tologinnavigation = useNavigation();
-  
+
+  let data = {fullName: fullname, 
+            Email: auth.currentUser?.email,
+            type: vehicleType,
+            Date_Heure: date,
+            duree: 0};
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+    let tempDate = new Date(currentDate);
+    let fDate = tempDate.getDate() + '/' + (tempDate.getMonth()+1) + '/' + tempDate.getFullYear();
+    let fTime = 'Hours: ' + tempDate.getHours() + ' | Minutes: ' + tempDate.getMinutes();
+    setText(fDate + '\n' + fTime)
+    console.log(text)
+  };
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
 
   function handleReservation() {
     // TODO: Add reservation logic here
@@ -32,20 +59,33 @@ export default function HomeScreen() {
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <Text style={styles.head}>Reservation</Text>
-      <Text>Current user: {auth.currentUser?.email}</Text>
       <View style={styles.formContainer}>
+        <Text style={styles.radioLabel}>Nom et Prénom:</Text>
         <TextInput
           placeholder="Fullname"
           value={fullname}
           onChangeText={setFullname}
           style={styles.input}
         />
-        <TextInput
-          placeholder="Date and Time"
-          value={datetime}
-          onChangeText={setDatetime}
-          style={styles.input}
-        />
+        <View style={styles.datepicker}>
+          <TouchableOpacity onPress={() => showMode('date')} style={styles.dateNTime}>
+            <Text style={styles.buttonText}>Date</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => showMode('time')} style={styles.dateNTime}>
+            <Text style={styles.buttonText}>Time</Text>
+          </TouchableOpacity>
+        </View>
+
+        {show && (
+          <DateTimePicker
+          testID='dateTimePicker'
+          value={date}
+          mode={mode}
+          is24Hour={true}
+          display='default'
+          onChange={onChange}
+        />)}
+
         <View style={styles.radioContainer}>
           <Text style={styles.radioLabel}>Vehicle Type:</Text>
           <TouchableOpacity
@@ -78,7 +118,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     alignItems: 'center',
     paddingBottom: 50,
   },
@@ -99,7 +138,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
-    marginTop: 30,
+    marginBottom: 20,
+    marginTop: 10,
   },
 
   radioContainer: {
@@ -141,7 +181,6 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
-    marginTop: 40,
     marginTop: 50,
   },
 
@@ -156,5 +195,22 @@ const styles = StyleSheet.create({
     marginTop: 20,
     borderColor: 'white',
     borderWidth: 2,
+  },
+
+  datepicker: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+  },
+
+  dateNTime: {
+    backgroundColor: 'orange',
+    marginLeft: 7,
+    marginRight: 7,
+    height: 40,
+    width: '45%',
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: 'center',
   },
 });
