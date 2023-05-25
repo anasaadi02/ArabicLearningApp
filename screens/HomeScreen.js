@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import { Database, ref, set } from '@firebase/database';
 
 
 
@@ -16,13 +16,7 @@ export default function HomeScreen() {
   const [text, setText] = useState('Empty')
   const [vehicleType, setVehicleType] = useState('');
 
-  const tologinnavigation = useNavigation();
-
-  let data = {fullName: fullname, 
-            Email: auth.currentUser?.email,
-            type: vehicleType,
-            Date_Heure: date,
-            duree: 0};
+  const navigation = useNavigation();
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -40,7 +34,13 @@ export default function HomeScreen() {
   };
 
   function handleReservation() {
-    // TODO: Add reservation logic here
+    set(ref(db, 'reservations/' + fullname), {
+      FullName: fullname, 
+      Email: auth.currentUser?.email,
+      type: vehicleType,
+      Date_Heure: date,
+      duree: 0
+    }).then(navigation.navigate('Ticket'));
   };
 
   function logout() {
@@ -50,7 +50,7 @@ export default function HomeScreen() {
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, user => {
       if (!user) {
-        tologinnavigation.navigate("Login");
+        navigation.navigate("Login");
       }
     })
     return unsub;
