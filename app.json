@@ -7,7 +7,7 @@
     "icon": "./assets/logo_pfa.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash2.png",
+      "image": "./assets/splash1_rb.png",
       "resizeMode": "contain",
       "backgroundColor": "fcae1e"
     },
