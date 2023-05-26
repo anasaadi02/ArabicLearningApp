@@ -24,6 +24,8 @@
     "dotenv": "^16.0.3",
     "expo": "~48.0.15",
     "expo-constants": "~14.2.1",
+    "expo-print": "~12.2.1",
+    "expo-sharing": "~11.2.2",
     "expo-status-bar": "~1.4.4",
     "firebase": "^9.22.0",
     "react": "18.2.0",

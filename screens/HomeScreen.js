@@ -5,7 +5,8 @@ import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Database, ref, set } from '@firebase/database';
-
+import { printToFileAsync } from 'expo-print';
+import { shareAsync } from 'expo-sharing';
 
 
 export default function HomeScreen() {
@@ -14,9 +15,13 @@ export default function HomeScreen() {
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [text, setText] = useState('Empty')
+  const [duree, setDuree] = useState('');
   const [vehicleType, setVehicleType] = useState('');
 
+  let datestr = date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear() + '   Hours: ' + date.getHours() + ' | Minutes: ' + date.getMinutes();
   const navigation = useNavigation();
+
+  let data = [fullname, auth.currentUser?.email, vehicleType, datestr, duree, montant(duree, vehicleType)];
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -38,8 +43,9 @@ export default function HomeScreen() {
       FullName: fullname, 
       Email: auth.currentUser?.email,
       type: vehicleType,
-      Date_Heure: date,
-      duree: 0
+      DateHeure: datestr,
+      duree: duree,
+      montant : montant(duree, vehicleType)
     }).then(navigation.navigate('Ticket'));
   };
 
@@ -55,6 +61,18 @@ export default function HomeScreen() {
     })
     return unsub;
   }, []);
+
+  function montant(duree, vehicleType) {
+    duree = parseInt(duree);
+    if (vehicleType === 'car'){
+      return duree*5
+    }else if (vehicleType === 'truck'){
+      return duree*8
+    }else if (vehicleType === 'motorcycle'){
+      return duree*3
+    }
+
+  };
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
@@ -85,6 +103,14 @@ export default function HomeScreen() {
           display='default'
           onChange={onChange}
         />)}
+
+        <Text style={styles.radioLabel}>Durée éstimée (en heure):</Text>
+        <TextInput
+          placeholder="Durée"
+          value={duree}
+          onChangeText={setDuree}
+          style={styles.input}
+        />
 
         <View style={styles.radioContainer}>
           <Text style={styles.radioLabel}>Vehicle Type:</Text>
@@ -151,6 +177,7 @@ const styles = StyleSheet.create({
   radioLabel: {
     fontWeight: 'bold',
     marginRight: 10,
+    marginTop: 5,
   },
 
   radioOption: {

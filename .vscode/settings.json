@@ -1,11 +1,13 @@
 {
     "cSpell.words": [
         "datentime",
+        "datestr",
         "datetimepicker",
         "duree",
         "Firestore",
         "Fullname",
         "Heure",
+        "montant",
         "tologinnavigation",
         "unsub"
     ]

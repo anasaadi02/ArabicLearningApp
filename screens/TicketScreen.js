@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
 
 export default function TicketScreen() {
   const navigation = useNavigation();
@@ -12,12 +12,12 @@ export default function TicketScreen() {
   }
 
   function handleReturnToHome() {
-    navigation.navigate('Home'); // Navigate back to the Home screen
+    navigation.navigate('Home');
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.head}>Reservation Confirmed</Text>
+      <Text style={styles.head}>Reservation Done!</Text>
       <TouchableOpacity onPress={handleDownloadTicket} style={styles.button}>
         <Text style={styles.buttonText}>Download Ticket</Text>
       </TouchableOpacity>
@@ -36,10 +36,11 @@ const styles = StyleSheet.create({
   },
 
   head: {
-    fontSize: 50,
+    fontSize: 30,
     paddingBottom: 50,
     fontWeight: 'bold',
     color: 'orange',
+    alignItems: 'center',
   },
 
   button: {
