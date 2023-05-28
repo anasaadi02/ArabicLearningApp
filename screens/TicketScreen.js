@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import { printToFileAsync } from 'expo-print';
 import { shareAsync } from 'expo-sharing';
-import * as FileSystem from 'expo-file-system'
 
 export default function TicketScreen() {
   const navigation = useNavigation();
@@ -18,7 +17,7 @@ export default function TicketScreen() {
         <p><strong>Date and Time:</strong> ${route.params.DateHeure}</p>
         <p><strong>Vehicle Type:</strong> ${route.params.type}</p>
         <p><strong>Duration:</strong> ${route.params.duree} hours</p>
-        <p><strong>Price:</strong> $${route.params.montant}</p>
+        <p><strong>Price:</strong> ${route.params.montant} Dh</p>
       </div>
     </div>
   </html>`;
