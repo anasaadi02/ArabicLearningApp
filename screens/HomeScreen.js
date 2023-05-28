@@ -5,8 +5,6 @@ import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Database, ref, set } from '@firebase/database';
-import { printToFileAsync } from 'expo-print';
-import { shareAsync } from 'expo-sharing';
 
 
 export default function HomeScreen() {
@@ -18,7 +16,7 @@ export default function HomeScreen() {
   const [duree, setDuree] = useState('');
   const [vehicleType, setVehicleType] = useState('');
 
-  let datestr = date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear() + '   Hours: ' + date.getHours() + ' | Minutes: ' + date.getMinutes();
+  let datestr = date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear() + ' | ' + date.getHours() + ' : ' + date.getMinutes();
   const navigation = useNavigation();
 
   let data = [fullname, auth.currentUser?.email, vehicleType, datestr, duree, montant(duree, vehicleType)];
@@ -31,7 +29,6 @@ export default function HomeScreen() {
     let fDate = tempDate.getDate() + '/' + (tempDate.getMonth()+1) + '/' + tempDate.getFullYear();
     let fTime = 'Hours: ' + tempDate.getHours() + ' | Minutes: ' + tempDate.getMinutes();
     setText(fDate + '\n' + fTime)
-    console.log(text)
   };
   const showMode = (currentMode) => {
     setShow(true);
@@ -46,7 +43,14 @@ export default function HomeScreen() {
       DateHeure: datestr,
       duree: duree,
       montant : montant(duree, vehicleType)
-    }).then(navigation.navigate('Ticket'));
+    }).then(navigation.navigate('Ticket', {
+      FullName: fullname, 
+      Email: auth.currentUser?.email,
+      type: vehicleType,
+      DateHeure: datestr,
+      duree: duree,
+      montant : montant(duree, vehicleType)
+    }));
   };
 
   function logout() {
