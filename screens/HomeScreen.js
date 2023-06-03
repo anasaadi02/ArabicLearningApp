@@ -82,7 +82,7 @@ export default function HomeScreen() {
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <Text style={styles.head}>Reservation</Text>
       <View style={styles.formContainer}>
-        <Text style={styles.radioLabel}>Nom et Prénom:</Text>
+        <Text style={styles.radioLabel}>Full name:</Text>
         <TextInput
           placeholder="Fullname"
           value={fullname}
@@ -108,9 +108,9 @@ export default function HomeScreen() {
           onChange={onChange}
         />)}
 
-        <Text style={styles.radioLabel}>Durée éstimée (en heure):</Text>
+        <Text style={styles.radioLabel}>Duration (Hours):</Text>
         <TextInput
-          placeholder="Durée"
+          placeholder=""
           value={duree}
           onChangeText={setDuree}
           style={styles.input}

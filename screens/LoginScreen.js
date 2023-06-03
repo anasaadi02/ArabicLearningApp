@@ -9,18 +9,16 @@ import {
 import React, { useEffect, useState } from "react";
 import { auth } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
-import { UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 
 export default function LoginScreen() {
-  const [isSignedIn, setIsSignedIn] = useState(false);
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
 
   const navigation = useNavigation();
 
   function handleSignup() {
-    createUserWithEmailAndPassword(auth, email, password)
-    .catch(alert("This email is already used!"));
+    navigation.navigate('Register');
   }
 
   function handleLogin() {
@@ -63,10 +61,11 @@ export default function LoginScreen() {
          style={styles.button}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
+        <Text style={styles.orText}>or</Text>
         <TouchableOpacity
          onPress={() => handleSignup()}
          style={[styles.button, styles.buttonOutline]}>
-          <Text style={styles.buttonOutlineText}>Register</Text>
+          <Text style={styles.buttonOutlineText}>Create a New Account</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -132,6 +131,13 @@ const styles = StyleSheet.create({
     color: 'orange',
     fontWeight: '700',
     fontSize: 16,
+  },
+
+  orText: {
+    fontSize: 16,
+    marginBottom: 10,
+    marginTop: 10,
+    fontWeight: "bold",
   },
 
 });
