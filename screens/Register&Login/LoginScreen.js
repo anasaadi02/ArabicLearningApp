@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 
 export default function LoginScreen() {
@@ -17,13 +17,25 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [language, setLanguage] = useState("Eng");
   const [errorMessage, setErrorMessage] = useState("");
+  const [infoMessage, setInfoMessage] = useState("");
 
   const navigation = useNavigation();
+  const route = useRoute();
+
+  useEffect(() => {
+    if (route.params?.message) {
+      setInfoMessage(route.params.message);
+    }
+    if (route.params?.language) {
+      setLanguage(route.params.language);
+    }
+  }, [route.params]);
 
   async function handleLogin() {
     try {
       // Clear previous error message
       setErrorMessage("");
+      setInfoMessage("");
 
       // Sign in with email and password
       const userCredentials = await signInWithEmailAndPassword(
@@ -32,11 +44,18 @@ export default function LoginScreen() {
         password
       );
 
-      // Log user credentials for debugging
-      // console.log("User credentials:", userCredentials);
-
       // Extract user info
       const user = userCredentials.user;
+
+      // Check if email is verified
+      if (!user.emailVerified) {
+        setErrorMessage(
+          language === "Eng"
+            ? "Please verify your email address before logging in."
+            : "يرجى التحقق من عنوان بريدك الإلكتروني قبل تسجيل الدخول."
+        );
+        return;
+      }
 
       // Save user info to AsyncStorage
       await AsyncStorage.setItem("userId", user.uid);
@@ -44,9 +63,6 @@ export default function LoginScreen() {
       // Navigate to Home screen
       navigation.navigate("Home", { language });
     } catch (error) {
-      // Log the error for debugging
-      // console.error("Login error:", error);
-
       // Handle login errors
       switch (error.code) {
         case "auth/user-not-found":
@@ -56,6 +72,11 @@ export default function LoginScreen() {
               ? "Invalid email or password."
               : "بريد إلكتروني أو كلمة مرور غير صالحة."
           );
+        case "auth/network-request-failed":
+          setErrorMessage(
+            language === "Eng" ? "network essue." : "مشكلة شبكة الانترنيت."
+          );
+
           break;
         default:
           setErrorMessage(
@@ -69,7 +90,7 @@ export default function LoginScreen() {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
-      if (user) {
+      if (user && user.emailVerified) {
         navigation.navigate("Home", { language });
       }
     });
@@ -83,7 +104,6 @@ export default function LoginScreen() {
   const switchLangtoEng = () => {
     if (language === "Arb") setLanguage("Eng");
   };
-
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <View

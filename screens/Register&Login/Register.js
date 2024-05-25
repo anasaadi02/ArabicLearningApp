@@ -6,8 +6,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
+import { auth } from "../../firebase";
 import { useNavigation } from "@react-navigation/native";
 
 export default function RegisterScreen({ route }) {
@@ -15,8 +18,9 @@ export default function RegisterScreen({ route }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [language, setLanguage] = useState(route.params.language);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // const { language } = route.params;
+  const navigation = useNavigation();
 
   const switchLangtoArb = () => {
     if (language === "Eng") setLanguage("Arb");
@@ -24,22 +28,68 @@ export default function RegisterScreen({ route }) {
   const switchLangtoEng = () => {
     if (language === "Arb") setLanguage("Eng");
   };
-  const navigation = useNavigation();
 
-  function handleRegister() {
+  async function handleRegister() {
     if (password === confirmPassword) {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          navigation.navigate("Login");
-        })
-        .catch((error) => {
-          console.log("Registration error:", error);
+      try {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        await sendEmailVerification(userCredential.user);
+        navigation.navigate("Login", {
+          language,
+          message:
+            language === "Eng"
+              ? "Verification email sent. Please check your inbox."
+              : "تم إرسال بريد التحقق. يرجى التحقق من بريدك الوارد.",
         });
+      } catch (error) {
+        console.log("Registration error:", error);
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            setErrorMessage(
+              language === "Eng"
+                ? "The email address is already in use by another account."
+                : "عنوان البريد الإلكتروني مستخدم بالفعل من قبل حساب آخر."
+            );
+            break;
+          case "auth/invalid-email":
+            setErrorMessage(
+              language === "Eng"
+                ? "The email address is not valid."
+                : "عنوان البريد الإلكتروني غير صالح."
+            );
+            break;
+          case "auth/weak-password":
+            setErrorMessage(
+              language === "Eng"
+                ? "The password is too weak."
+                : "كلمة المرور ضعيفة جدًا."
+            );
+          case "auth/network-request-failed":
+            setErrorMessage(
+              language === "Eng" ? "network essue." : "مشكلة شبكة الانترنيت."
+            );
+            break;
+          default:
+            setErrorMessage(
+              language === "Eng"
+                ? "Registration failed. Please try again."
+                : "فشل التسجيل. يرجى المحاولة مرة أخرى."
+            );
+        }
+      }
     } else {
-      alert("Passwords do not match");
-      console.log("Passwords do not match");
+      setErrorMessage(
+        language === "Eng"
+          ? "Passwords do not match."
+          : "كلمات المرور غير متطابقة."
+      );
     }
   }
+
   function handleLogin() {
     navigation.navigate("Login");
   }
@@ -50,7 +100,6 @@ export default function RegisterScreen({ route }) {
         style={{
           display: "flex",
           flexDirection: "row",
-          // justifyContent: "space-between",
           position: "relative",
           left: 150,
           top: -100,
@@ -116,11 +165,13 @@ export default function RegisterScreen({ route }) {
             secureTextEntry
           />
         )}
+        {errorMessage ? (
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        ) : null}
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={handleRegister} style={styles.button}>
           <Text style={styles.buttonText}>
-            {" "}
             {language == "Eng" ? "Create Account" : "إنشاء حساب"}
           </Text>
         </TouchableOpacity>
@@ -130,7 +181,6 @@ export default function RegisterScreen({ route }) {
           style={[styles.button, styles.buttonOutline]}
         >
           <Text style={styles.buttonOutlineText}>
-            {" "}
             {language == "Eng" ? "Login" : "تسجيل الدخول"}
           </Text>
         </TouchableOpacity>
@@ -150,14 +200,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
   title: {
     fontSize: 50,
     paddingBottom: 50,
     fontWeight: "bold",
     color: "orange",
   },
-
   input: {
     backgroundColor: "white",
     paddingHorizontal: 15,
@@ -173,11 +221,13 @@ const styles = StyleSheet.create({
     marginTop: 5,
     textAlign: "right",
   },
-
   inputContainer: {
     width: "80%",
   },
-
+  errorText: {
+    color: "red",
+    marginTop: 5,
+  },
   button: {
     backgroundColor: "orange",
     width: "100%",
@@ -185,34 +235,29 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
   },
-
   buttonContainer: {
     width: "60%",
     justifyContent: "center",
     alignItems: "center",
     marginTop: 40,
   },
-
   buttonText: {
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
   },
-
   orText: {
     fontSize: 16,
     marginBottom: 10,
     marginTop: 10,
     fontWeight: "bold",
   },
-
   buttonOutline: {
     backgroundColor: "white",
     marginTop: 5,
     borderColor: "orange",
     borderWidth: 2,
   },
-
   buttonOutlineText: {
     color: "orange",
     fontWeight: "700",

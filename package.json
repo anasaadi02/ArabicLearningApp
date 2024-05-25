@@ -43,7 +43,8 @@
     "react-native-screens": "~3.20.0",
     "react-native-tts": "^4.1.0",
     "react-native-voice": "^0.3.0",
-    "react-native-web": "~0.18.11"
+    "react-native-web": "~0.18.11",
+    "expo-linear-gradient": "~12.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
