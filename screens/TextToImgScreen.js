@@ -14,6 +14,7 @@ export default function TextToImgScreen({ route }) {
   const [textInput, setTextInput] = useState("");
   const [generatedImage, setGeneratedImage] = useState(null);
   const [language, setLanguage] = useState(route.params.language);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleTextChange = (text) => {
     setTextInput(text);
@@ -30,8 +31,17 @@ export default function TextToImgScreen({ route }) {
   const generateImage = () => {
     // Here you would call your image generation API or library
     // For the sake of this example, let's assume the image is fetched from an endpoint
-    const generatedImg = "https://example.com/generated-image.jpg";
-    setGeneratedImage(generatedImg);
+    if (textInput == "") {
+      setGeneratedImage(null);
+      setErrorMessage(
+        language === "Eng" ? "Please enter a text" : "المرجو كتابة نص."
+      );
+    } else {
+      setErrorMessage("");
+      const generatedImg = "https://example.com/generated-image.jpg";
+      setGeneratedImage(generatedImg);
+    }
+
     // console.log("new generated pic");
   };
 
@@ -63,6 +73,9 @@ export default function TextToImgScreen({ route }) {
             multiline={true}
           />
         )}
+        {errorMessage ? (
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        ) : null}
         <TouchableOpacity onPress={generateImage} style={styles.button}>
           <Text style={styles.buttonText}>
             {language == "Eng" ? "Generate Image" : "انشئ صورة"}
@@ -81,13 +94,15 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 16,
     margin: 2,
+    top: -75,
+    left: 10,
   },
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
     padding: 20,
-    paddingTop: 50,
+    paddingTop: 200,
   },
   topSection: {
     width: "100%",
@@ -119,6 +134,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "white",
     textAlign: "right",
+  },
+  errorText: {
+    color: "red",
+    marginTop: 2,
+    top: -8,
   },
   image: {
     width: 200,
