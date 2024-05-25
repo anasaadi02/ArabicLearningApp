@@ -8,6 +8,8 @@ import TicketScreen from "./screens/TicketScreen";
 import RegisterScreen from "./screens/Register";
 import TextToImgScreen from "./screens/TextToImgScreen";
 import LettersScreen from "./screens/LettersScreen";
+import Text_AudioScreen from "./screens/Text_AudioScreen";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +53,10 @@ export default function App() {
           // options={{ headerShown: false }}
           name="Letters"
           component={LettersScreen}
+        />
+        <Stack.Screen 
+        name="Text_Audio" 
+        component={Text_AudioScreen} 
         />
       </Stack.Navigator>
     </NavigationContainer>

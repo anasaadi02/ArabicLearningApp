@@ -1,33 +1,13 @@
-import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
-  LayoutAnimation,
-} from "react-native";
-import { auth, db } from "../firebase";
-import { signOut, onAuthStateChanged } from "firebase/auth";
+import React, { useState } from "react";
+import { StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { Database, ref, set } from "@firebase/database";
-import { Button } from "react-native-elements";
 import CostumAlert from "./CustomAlert";
 
 export default function HomeScreen({ route }) {
-  // const [fullname, setFullname] = useState("");
   const [language, setLanguage] = useState(route.params.language);
-  const [popup, setpopup] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
-  // const [date, setDate] = useState(new Date());
-  // const [mode, setMode] = useState("date");
-  // const [show, setShow] = useState(false);
-  // const [text, setText] = useState("Empty");
-  // const [duree, setDuree] = useState("");
-  // const [vehicleType, setVehicleType] = useState("");
+  const navigation = useNavigation();
+
   const switchLangtoArb = () => {
     if (language === "Eng") setLanguage("Arb");
   };
@@ -38,51 +18,6 @@ export default function HomeScreen({ route }) {
     setOpenAlert(false);
     navigation.navigate("Login");
   };
-  // let datestr =
-  //   date.getDate() +
-  //   "/" +
-  //   (date.getMonth() + 1) +
-  //   "/" +
-  //   date.getFullYear() +
-  //   " | " +
-  //   date.getHours() +
-  //   " : " +
-  //   date.getMinutes();
-  const navigation = useNavigation();
-
-  // let data = [fullname, auth.currentUser?.email, vehicleType, datestr, duree, montant(duree, vehicleType)];
-
-  // const onChange = (event, selectedDate) => {
-  //   const currentDate = selectedDate || date;
-  //   setShow(Platform.OS === 'ios');
-  //   setDate(currentDate);
-  //   let tempDate = new Date(currentDate);
-  //   let fDate = tempDate.getDate() + '/' + (tempDate.getMonth()+1) + '/' + tempDate.getFullYear();
-  //   let fTime = 'Hours: ' + tempDate.getHours() + ' | Minutes: ' + tempDate.getMinutes();
-  //   setText(fDate + '\n' + fTime)
-  // };
-  // const showMode = (currentMode) => {
-  //   setShow(true);
-  //   setMode(currentMode);
-  // };
-
-  // function handleReservation() {
-  //   set(ref(db, 'reservations/' + fullname), {
-  //     FullName: fullname,
-  //     Email: auth.currentUser?.email,
-  //     type: vehicleType,
-  //     DateHeure: datestr,
-  //     duree: duree,
-  //     montant : montant(duree, vehicleType)
-  //   }).then(navigation.navigate('Ticket', {
-  //     FullName: fullname,
-  //     Email: auth.currentUser?.email,
-  //     type: vehicleType,
-  //     DateHeure: datestr,
-  //     duree: duree,
-  //     montant : montant(duree, vehicleType)
-  //   }));
-  // };
 
   function TextToImgScreen() {
     navigation.navigate("Images", { language });
@@ -91,40 +26,15 @@ export default function HomeScreen({ route }) {
     navigation.navigate("Letters", { language });
     console.log("navigation succ");
   }
+  function goToTextAudioScreen() {
+    navigation.navigate("Text_Audio", { language });
+  }
   function logout() {
     setOpenAlert(true);
   }
 
-  // useEffect(() => {
-  //   const unsub = onAuthStateChanged(auth, user => {
-  //     if (!user) {
-  //       navigation.navigate("Login");
-  //     }
-  //   })
-  //   return unsub;
-  // }, []);
-
-  // function montant(duree, vehicleType) {
-  //   duree = parseInt(duree);
-  //   if (vehicleType === 'car'){
-  //     return duree*5
-  //   }else if (vehicleType === 'truck'){
-  //     return duree*8
-  //   }else if (vehicleType === 'motorcycle'){
-  //     return duree*3
-  //   }
-
-  // };
-
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
-      {/* <CostumAlert
-        isVisible={openAlert}
-        title="للمتابعة و الاطلاع على التفاصيل، يجب عليك تسجيل الدخول."
-        actionToAccept={() => navigateToLogin()}
-        actionToDecline={() => setOpenAlert(false)}
-        buttonText="تسجيل الدخول"
-      /> */}
       <View
         style={{
           display: "flex",
@@ -151,63 +61,8 @@ export default function HomeScreen({ route }) {
             ? "choose an option to continue learning"
             : "إختر احد الإختيارات للإستكمال التعلم  "}
         </Text>
-        {/* <TextInput
-          placeholder="Fullname"
-          value={fullname}
-          onChangeText={setFullname}
-          style={styles.input}
-        /> */}
-        {/* <View style={styles.datepicker}>
-          <TouchableOpacity onPress={() => showMode('date')} style={styles.dateNTime}>
-            <Text style={styles.buttonText}>Date</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => showMode('time')} style={styles.dateNTime}>
-            <Text style={styles.buttonText}>Time</Text>
-          </TouchableOpacity>
-        </View> */}
-
-        {/* {show && (
-          <DateTimePicker
-          testID='dateTimePicker'
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          display='default'
-          onChange={onChange}
-        />)} */}
-        {/* 
-        <Text style={styles.radioLabel}>Duration (Hours):</Text>
-        <TextInput
-          placeholder=""
-          value={duree}
-          onChangeText={setDuree}
-          style={styles.input}
-        />
-
-        <View style={styles.radioContainer}>
-          <Text style={styles.radioLabel}>Vehicle Type:</Text>
-          <TouchableOpacity
-            style={[styles.radioOption, vehicleType === 'car' && styles.radioOptionSelected]}
-            onPress={() => setVehicleType('car')}>
-            <Text style={[styles.radioOptionLabel, vehicleType === 'car' && styles.radioOptionLabelSelected]}>Car</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.radioOption, vehicleType === 'truck' && styles.radioOptionSelected]}
-            onPress={() => setVehicleType('truck')}>
-            <Text style={[styles.radioOptionLabel, vehicleType === 'truck' && styles.radioOptionLabelSelected]}>Truck</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.radioOption, vehicleType === 'motorcycle' && styles.radioOptionSelected]}
-            onPress={() => setVehicleType('motorcycle')}>
-            <Text style={[styles.radioOptionLabel, vehicleType === 'motorcycle' && styles.radioOptionLabelSelected]}>Motorcycle</Text>
-          </TouchableOpacity>
-        </View> */}
       </View>
-      {/* <TouchableOpacity onPress={handleReservation} style={styles.button}>
-        <Text style={styles.buttonText}>Make Reservation</Text>
-      </TouchableOpacity> */}
       <TouchableOpacity
-        // onPress={logout}
         style={[styles.button, { marginTop: 100 }]}
         onPress={() => GoToLettersScreen()}
       >
@@ -216,7 +71,6 @@ export default function HomeScreen({ route }) {
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        // onPress={logout}
         style={styles.button}
       >
         <Text style={styles.buttonText}>
@@ -232,7 +86,7 @@ export default function HomeScreen({ route }) {
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        // onPress={logout}
+        onPress={goToTextAudioScreen}
         style={[styles.button]}
       >
         <Text style={styles.buttonText}>
@@ -259,12 +113,6 @@ export default function HomeScreen({ route }) {
           {language == "Eng" ? "Logout" : "تسجيل الخروج"}
         </Text>
       </TouchableOpacity>
-      {/* {popup && (
-        <View style={{ width: 100, height: 100, backgroundColor: "red" }}>
-          <Text>tst</Text>
-          <Button>hi</Button>
-        </View>
-      )} */}
     </KeyboardAvoidingView>
   );
 }
@@ -315,7 +163,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     top: 50,
     textAlign: "center",
-    fontWeight: 25,
+    fontWeight: "bold",
     fontSize: 17,
   },
 
