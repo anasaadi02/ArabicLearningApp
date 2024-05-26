@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  ScrollView,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import CostumAlert from "./CustomAlert";
 
@@ -32,92 +39,103 @@ export default function HomeScreen({ route }) {
   function logout() {
     setOpenAlert(true);
   }
+  function TextToImgScreen() {
+    navigation.navigate("Images", { language });
+  }
+  function QuizzScreen() {
+    navigation.navigate("Quizz", { language });
+  }
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          position: "relative",
-          left: 150,
-          top: 30,
-        }}
-      >
-        <TouchableOpacity onPress={switchLangtoEng}>
-          <Text style={styles.switchlang}>Eng /</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={switchLangtoArb}>
-          <Text style={styles.switchlang}>Arb</Text>
-        </TouchableOpacity>
-      </View>
+    <ScrollView style={styles.Scroll}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            position: "relative",
+            left: 150,
+            top: 30,
+          }}
+        >
+          <TouchableOpacity onPress={switchLangtoEng}>
+            <Text style={styles.switchlang}>Eng /</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={switchLangtoArb}>
+            <Text style={styles.switchlang}>Arb</Text>
+          </TouchableOpacity>
+        </View>
 
-      <Text style={styles.head}>
-        {language == "Eng" ? "Activities List" : "لائحة الأنشطة"}
-      </Text>
-      <View style={styles.formContainer}>
-        <Text style={styles.radioLabel}>
-          {language == "Eng"
-            ? "choose an option to continue learning"
-            : "إختر احد الإختيارات للإستكمال التعلم  "}
+        <Text style={styles.head}>
+          {language == "Eng" ? "Activities List" : "لائحة الأنشطة"}
         </Text>
-      </View>
-      <TouchableOpacity
-        style={[styles.button, { marginTop: 100 }]}
-        onPress={() => GoToLettersScreen()}
-      >
-        <Text style={styles.buttonText}>
-          {language == "Eng" ? "Lettres" : "الحروف"}
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>
-          {language == "Eng" ? "Traduction" : "الترجمة"}
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => TextToImgScreen()}
-        style={[styles.button]}
-      >
-        <Text style={styles.buttonText}>
-          {language == "Eng" ? "Images" : "الصور"}
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={goToTextAudioScreen}
-        style={[styles.button]}
-      >
-        <Text style={styles.buttonText}>
-          {language == "Eng" ? "Audios" : "الصوتيات"}
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={logout}
-        style={[styles.button, styles.buttonOutline]}
-      >
-        <CostumAlert
-          isVisible={openAlert}
-          title={
-            language == "Eng"
-              ? "Are you shure of loging out"
-              : "هل أنت متأكد من الخروج"
-          }
-          actionToAccept={() => navigateToLogin()}
-          actionToDecline={() => setOpenAlert(false)}
-          decline={language == "Eng" ? "decline" : "إلغاء"}
-          buttonText={language == "Eng" ? "validate" : "تأكيد"}
-        />
-        <Text style={[styles.buttonText]}>
-          {language == "Eng" ? "Logout" : "تسجيل الخروج"}
-        </Text>
-      </TouchableOpacity>
-    </KeyboardAvoidingView>
+        <View style={styles.formContainer}>
+          <Text style={styles.radioLabel}>
+            {language == "Eng"
+              ? "choose an option to continue learning"
+              : "إختر احد الإختيارات للإستكمال التعلم  "}
+          </Text>
+        </View>
+        <TouchableOpacity
+          style={[styles.button, { marginTop: 100 }]}
+          onPress={() => GoToLettersScreen()}
+        >
+          <Text style={styles.buttonText}>
+            {language == "Eng" ? "Lettres" : "الحروف"}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>
+            {language == "Eng" ? "Traduction" : "الترجمة"}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => TextToImgScreen()}
+          style={[styles.button]}
+        >
+          <Text style={styles.buttonText}>
+            {language == "Eng" ? "Images" : "الصور"}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={goToTextAudioScreen} style={[styles.button]}>
+          <Text style={styles.buttonText}>
+            {language == "Eng" ? "Audios" : "الصوتيات"}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={QuizzScreen} style={[styles.button]}>
+          <Text style={styles.buttonText}>
+            {language == "Eng" ? "Quizz" : "إختبارات"}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={logout}
+          style={[styles.button, styles.buttonOutline]}
+        >
+          <CostumAlert
+            isVisible={openAlert}
+            title={
+              language == "Eng"
+                ? "Are you shure of loging out"
+                : "هل أنت متأكد من الخروج"
+            }
+            actionToAccept={() => navigateToLogin()}
+            actionToDecline={() => setOpenAlert(false)}
+            decline={language == "Eng" ? "decline" : "إلغاء"}
+            buttonText={language == "Eng" ? "validate" : "تأكيد"}
+          />
+          <Text style={[styles.buttonText]}>
+            {language == "Eng" ? "Logout" : "تسجيل الخروج"}
+          </Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  Scroll: {
+    // marginBottom: -300,
+  },
   switchlang: {
     fontWeight: "700",
     fontSize: 16,
@@ -207,6 +225,7 @@ const styles = StyleSheet.create({
   buttonOutline: {
     backgroundColor: "red",
     marginTop: 20,
+    marginBottom: 10,
     borderColor: "white",
     borderWidth: 2,
   },

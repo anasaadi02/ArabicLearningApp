@@ -62,6 +62,15 @@ export default function LoginScreen() {
 
       // Navigate to Home screen
       navigation.navigate("Home", { language });
+
+      // Clear password input
+      setPassword("");
+
+      // Reset the navigation stack and navigate to Home screen
+      // navigation.reset({
+      //   index: 0,
+      //   routes: [{ name: "Home", params: { language } }],
+      // });
     } catch (error) {
       // Handle login errors
       switch (error.code) {
@@ -98,11 +107,30 @@ export default function LoginScreen() {
   }, []);
 
   const switchLangtoArb = () => {
-    if (language === "Eng") setLanguage("Arb");
+    setLanguage("Arb");
+    setErrorMessage(
+      errorMessage === "Invalid email or password."
+        ? "بريد إلكتروني أو كلمة مرور غير صالحة."
+        : errorMessage === "Login failed. Please try again."
+        ? "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى في وقت لاحق."
+        : errorMessage === "Please verify your email before logging in."
+        ? "يرجى التحقق من بريدك الإلكتروني قبل تسجيل الدخول."
+        : ""
+    );
   };
 
   const switchLangtoEng = () => {
-    if (language === "Arb") setLanguage("Eng");
+    setLanguage("Eng");
+    setErrorMessage(
+      errorMessage === "بريد إلكتروني أو كلمة مرور غير صالحة."
+        ? "Invalid email or password."
+        : errorMessage ===
+          "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى في وقت لاحق."
+        ? "Login failed. Please try again."
+        : errorMessage === "يرجى التحقق من بريدك الإلكتروني قبل تسجيل الدخول."
+        ? "Please verify your email before logging in."
+        : ""
+    );
   };
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">

@@ -10,14 +10,23 @@ import TextToImgScreen from "./screens/TextToImgScreen";
 import LettersScreen from "./screens/LettersScreen";
 import Text_AudioScreen from "./screens/Text_AudioScreen";
 import Onboarding from "./screens/Onboarding";
-
+import QuizzScreen from "./screens/QuizzScreen";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  // const [language, setLanguage] = useState("Eng");
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
+    <NavigationContainer initialRouteName="Onboarding">
+      <Stack.Navigator
+        initialRouteName="Onboarding"
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "orange",
+            color: "white", // Set header background color based on language
+          },
+        }}
+      >
         <Stack.Screen
           options={{ headerShown: false }}
           name="Onboard"
@@ -35,20 +44,24 @@ export default function App() {
           component={RegisterScreen}
         />
 
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ animationEnabled: false }}
+        />
         <Stack.Screen
           styles={{}}
-          options={{ headerShown: false }}
+          // options={{ headerShown: false }}
           name="Images"
           component={TextToImgScreen}
         />
-        <Stack.Screen
-          options={{ headerShown: false }}
+        {/* <Stack.Screen
+          // options={{ headerShown: false }}
           name="Audios"
           component={TextToImgScreen}
-        />
+        /> */}
         <Stack.Screen
-          options={{ headerShown: false }}
+          // options={{ headerShown: false }}
           name="Translation"
           component={TextToImgScreen}
         />
@@ -63,10 +76,8 @@ export default function App() {
           name="Letters"
           component={LettersScreen}
         />
-        <Stack.Screen 
-        name="Text_Audio" 
-        component={Text_AudioScreen} 
-        />
+        <Stack.Screen name="Text_Audio" component={Text_AudioScreen} />
+        <Stack.Screen name="Quizz" component={QuizzScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
