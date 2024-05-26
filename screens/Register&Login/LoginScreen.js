@@ -76,15 +76,16 @@ export default function LoginScreen() {
       switch (error.code) {
         case "auth/user-not-found":
         case "auth/wrong-password":
+          console.log("hmm");
           setErrorMessage(
             language === "Eng"
               ? "Invalid email or password."
               : "بريد إلكتروني أو كلمة مرور غير صالحة."
           );
-        case "auth/network-request-failed":
-          setErrorMessage(
-            language === "Eng" ? "network essue." : "مشكلة شبكة الانترنيت."
-          );
+          // case "auth/network-request-failed":
+          //   setErrorMessage(
+          //     language === "Eng" ? "network essue." : "مشكلة شبكة الانترنيت."
+          //   );
 
           break;
         default:
