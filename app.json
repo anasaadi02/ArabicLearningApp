@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "fcae1e"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -20,10 +22,27 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo_pfa_rb.png",
         "backgroundColor": "fcae1e"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "@react-native-voice/voice",
+        {
+          "microphonePermission": "Allow microphone",
+          "speechRecognitionPermission": "Allow speech recognition"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "6c46303d-6ebc-47c8-823a-ed0e8c3b474c"
+      }
     }
   }
 }

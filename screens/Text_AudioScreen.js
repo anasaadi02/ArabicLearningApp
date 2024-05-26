@@ -7,16 +7,16 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import Tts from "react-native-tts";
-import Voice from "react-native-voice";
+import { speak } from 'expo-speech';
+import Voice from "@react-native-voice/voice";
 
 export default function Text_AudioScreen({ route }) {
   const [language, setLanguage] = useState(route.params.language);
   const [text, setText] = useState("");
   const [textInput, setTextInput] = useState("");
-  const [spokenText, setSpokenText] = useState("");
-  const [ttsReady, setTtsReady] = useState(false);
-  const [voiceInitialized, setVoiceInitialized] = useState(false);
+  const [spokenText, setSpokenText] = useState([]);
+  let [started, setStarted] = useState(false);
+  
 
   const switchLangtoArb = () => {
     if (language === "Eng") setLanguage("Arb");
@@ -28,58 +28,38 @@ export default function Text_AudioScreen({ route }) {
   const handleTextChange = (text) => {
     setTextInput(text);
   };
-  useEffect(() => {
-    const initializeTts = async () => {
-      try {
-        await Tts.getInitStatus();
-        setTtsReady(true);
-      } catch (err) {
-        console.warn("TTS initialization failed:", err);
-      }
-    };
 
-    const initializeVoice = async () => {
-      try {
-        await Voice.isAvailable();
-        setVoiceInitialized(true);
-      } catch (error) {
-        console.warn("Voice initialization failed:", error);
-      }
-    };
 
-    initializeTts();
-    initializeVoice();
-
-    // Set up the event listener for speech results
-    const onSpeechResults = (event) => {
-      setSpokenText(event.value[0]);
-    };
-
-    Voice.onSpeechResults = onSpeechResults;
-
-    // Clean up the event listener
-    return () => {
-      Voice.destroy().then(Voice.removeAllListeners);
-    };
-  }, []);
 
   const handleTextToSpeech = () => {
-    if (ttsReady) {
-      Tts.speak(text);
-    } else {
-      Alert.alert("TTS not ready", "Text-to-Speech is not ready yet.");
-    }
+    speak(text, { language: language === 'Eng' ? 'en' : 'ar' });
   };
 
-  const handleSpeechToText = () => {
-    if (voiceInitialized) {
-      Voice.start("en-US");
-    } else {
-      Alert.alert(
-        "Voice not available",
-        "Speech recognition is not available on this device."
-      );
+  useEffect(() => {
+    Voice.onSpeechError = onSpeechError;
+    Voice.onSpeechResults = onSpeechResults;
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
     }
+  }, []);
+
+  const startSpeechToText = async() => {
+    Voice.start("ar-SA");
+    setStarted(true);
+  };
+
+  const stopSpeechToText = async() => {
+    await Voice.stop();
+    setStarted(false);
+  };
+
+  const onSpeechResults = (result) => {
+    setSpokenText(result.value);
+  };
+
+  const onSpeechError = (error) => {
+    console.log(error);
   };
 
   return (
@@ -122,12 +102,17 @@ export default function Text_AudioScreen({ route }) {
           {language === "Eng" ? "Text to Speech" : "النص إلى كلام"}
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={handleSpeechToText} style={styles.button}>
+      {!started ?<TouchableOpacity onPress={startSpeechToText} style={styles.button}>
         <Text style={styles.buttonText}>
-          {language === "Eng" ? "Speech to Text" : "الكلام إلى نص"}
+          {language === "Eng" ? "Start Speech to Text" : "الكلام إلى نص"}
         </Text>
-      </TouchableOpacity>
-      <Text style={styles.resultText}>{spokenText}</Text>
+      </TouchableOpacity> :undefined}
+      {started ?<TouchableOpacity onPress={stopSpeechToText} style={styles.button}>
+        <Text style={styles.buttonText}>
+          {language === "Eng" ? "Stop Speech to Text" : "الكلام إلى نص"}
+        </Text>
+      </TouchableOpacity> :undefined}
+      {spokenText.map((text, index) => <Text key={index}>{text}</Text>)}
     </View>
   );
 }
