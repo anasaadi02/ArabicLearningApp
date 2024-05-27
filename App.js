@@ -11,11 +11,11 @@ import LettersScreen from "./screens/LettersScreen";
 import Text_AudioScreen from "./screens/Text_AudioScreen";
 import Onboarding from "./screens/Onboarding";
 import QuizzScreen from "./screens/QuizzScreen";
+import TranslationScreen from "./screens/TranslateScreen";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  // const [language, setLanguage] = useState("Eng");
   return (
     <NavigationContainer initialRouteName="Onboarding">
       <Stack.Navigator
@@ -31,7 +31,6 @@ export default function App() {
           name="Onboard"
           component={Onboarding}
         />
-
         <Stack.Screen
           options={{ headerShown: false }}
           name="Login"
@@ -42,27 +41,18 @@ export default function App() {
           name="Register"
           component={RegisterScreen}
         />
-
         <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={{ animationEnabled: false }}
         />
         <Stack.Screen
-          styles={{}}
-          // options={{ headerShown: false }}
           name="Images"
           component={TextToImgScreen}
         />
-        {/* <Stack.Screen
-          // options={{ headerShown: false }}
-          name="Audios"
-          component={TextToImgScreen}
-        /> */}
         <Stack.Screen
-          // options={{ headerShown: false }}
           name="Translation"
-          component={TextToImgScreen}
+          component={TranslationScreen} // Add the new screen to the stack
         />
         <Stack.Screen
           options={{ headerShown: false }}
@@ -71,7 +61,6 @@ export default function App() {
         />
         <Stack.Screen
           style={styles.stack}
-          // options={{ headerShown: false }}
           name="Letters"
           component={LettersScreen}
         />
