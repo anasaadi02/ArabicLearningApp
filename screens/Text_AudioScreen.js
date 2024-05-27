@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,13 +6,15 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import Tts from "react-native-tts";
-import Voice from "@react-native-voice/voice";
+import * as Speech from 'expo-speech';
+import { Audio } from 'expo-av';
 
 export default function Text_AudioScreen({ route }) {
   const [language, setLanguage] = useState(route.params.language);
   const [textInput, setTextInput] = useState("");
   const [spokenText, setSpokenText] = useState([]);
+  const [recording, setRecording] = useState(null);
+  const [transcription, setTranscription] = useState("");
   const [started, setStarted] = useState(false);
 
   const switchLangtoArb = () => {
@@ -28,35 +30,59 @@ export default function Text_AudioScreen({ route }) {
   };
 
   const handleTextToSpeech = () => {
-    Tts.speak(textInput);
+    Speech.speak(textInput, { language: language === "Eng" ? "en-US" : "ar-SA" });
   };
 
-
-  useEffect(() => {
-    Voice.onSpeechError = onSpeechError;
-    Voice.onSpeechResults = onSpeechResults;
-
-    return () => {
-      Voice.destroy().then(Voice.removeAllListeners);
-    };
-  }, []);
-
-  const startSpeechToText = async () => {
-    Voice.start("ar-SA");
-    setStarted(true);
+  const startRecording = async () => {
+    try {
+      await Audio.requestPermissionsAsync();
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+      
+      const { recording } = await Audio.Recording.createAsync(
+         Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+      );
+      setRecording(recording);
+      setStarted(true);
+    } catch (err) {
+      console.error('Failed to start recording', err);
+    }
   };
 
-  const stopSpeechToText = async () => {
-    await Voice.stop();
+  const stopRecording = async () => {
+    setRecording(undefined);
+    await recording.stopAndUnloadAsync();
+    const uri = recording.getURI();
+    console.log('Recording stopped and stored at', uri);
     setStarted(false);
+    await getTranscription(uri);
   };
 
-  const onSpeechResults = (result) => {
-    setSpokenText(result.value);
-  };
+  const getTranscription = async (uri) => {
+    try {
+      const formData = new FormData();
+      formData.append('audio', {
+        uri,
+        type: 'audio/x-wav',
+        name: 'recording.wav',
+      });
 
-  const onSpeechError = (error) => {
-    console.log(error);
+      const response = await fetch('http://your-server-address/transcribe', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      const transcription = await response.text();
+      setTranscription(transcription);
+      setSpokenText([...spokenText, transcription]);
+    } catch (err) {
+      console.error('Failed to get transcription', err);
+    }
   };
 
   return (
@@ -89,16 +115,16 @@ export default function Text_AudioScreen({ route }) {
         </Text>
       </TouchableOpacity>
       {!started ? (
-        <TouchableOpacity onPress={startSpeechToText} style={styles.button}>
+        <TouchableOpacity onPress={startRecording} style={styles.button}>
           <Text style={styles.buttonText}>
-            {language === "Eng" ? "Start Speech to Text" : "الكلام إلى نص"}
+            {language === "Eng" ? "Start Speech to Text" : "ابدأ الكلام إلى نص"}
           </Text>
         </TouchableOpacity>
       ) : undefined}
       {started ? (
-        <TouchableOpacity onPress={stopSpeechToText} style={styles.button}>
+        <TouchableOpacity onPress={stopRecording} style={styles.button}>
           <Text style={styles.buttonText}>
-            {language === "Eng" ? "Stop Speech to Text" : "الكلام إلى نص"}
+            {language === "Eng" ? "Stop Speech to Text" : "أوقف الكلام إلى نص"}
           </Text>
         </TouchableOpacity>
       ) : undefined}
