@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import CostumAlert from "./CustomAlert";
+import CustomAlert from "./CustomAlert";
 
 export default function HomeScreen({ route }) {
   const [language, setLanguage] = useState(route.params.language);
@@ -35,6 +35,9 @@ export default function HomeScreen({ route }) {
   }
   function goToTextAudioScreen() {
     navigation.navigate("Text_Audio", { language });
+  }
+  function goToTranslationScreen() {
+    navigation.navigate("Translation", { language });
   }
   function logout() {
     setOpenAlert(true);
@@ -84,9 +87,12 @@ export default function HomeScreen({ route }) {
             {language == "Eng" ? "Lettres" : "الحروف"}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={goToTranslationScreen}
+        >
           <Text style={styles.buttonText}>
-            {language == "Eng" ? "Traduction" : "الترجمة"}
+            {language == "Eng" ? "Translation" : "الترجمة"}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -111,7 +117,7 @@ export default function HomeScreen({ route }) {
           onPress={logout}
           style={[styles.button, styles.buttonOutline]}
         >
-          <CostumAlert
+          <CustomAlert
             isVisible={openAlert}
             title={
               language == "Eng"

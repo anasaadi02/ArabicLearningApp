@@ -1,0 +1,17 @@
+diff --git a/node_modules/react-native-voice/android/build.gradle b/node_modules/react-native-voice/android/build.gradle
+index c0484f8..2bd2233 100644
+--- a/node_modules/react-native-voice/android/build.gradle
++++ b/node_modules/react-native-voice/android/build.gradle
+@@ -58,8 +58,8 @@ allprojects {
+ def supportVersion = rootProject.hasProperty('supportLibVersion') ? rootProject.supportLibVersion : DEFAULT_SUPPORT_LIB_VERSION
+ 
+ dependencies {
+-    compile fileTree(dir: 'libs', include: ['*.jar'])
+-    testCompile 'junit:junit:4.12'
+-    compile 'com.android.support:appcompat-v7:${supportVersion}'
+-    compile 'com.facebook.react:react-native:+'
++    implementation fileTree(dir: 'libs', include: ['*.jar'])
++    testImplementation 'junit:junit:4.12'
++    implementation "com.android.support:appcompat-v7:${supportVersion}"
++    implementation 'com.facebook.react:react-native:+'
+ }

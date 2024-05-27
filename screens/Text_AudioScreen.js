@@ -5,18 +5,15 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  Alert,
 } from "react-native";
-import { speak } from 'expo-speech';
+import Tts from "react-native-tts";
 import Voice from "@react-native-voice/voice";
 
 export default function Text_AudioScreen({ route }) {
   const [language, setLanguage] = useState(route.params.language);
-  const [text, setText] = useState("");
   const [textInput, setTextInput] = useState("");
   const [spokenText, setSpokenText] = useState([]);
-  let [started, setStarted] = useState(false);
-  
+  const [started, setStarted] = useState(false);
 
   const switchLangtoArb = () => {
     if (language === "Eng") setLanguage("Arb");
@@ -25,15 +22,15 @@ export default function Text_AudioScreen({ route }) {
   const switchLangtoEng = () => {
     if (language === "Arb") setLanguage("Eng");
   };
+
   const handleTextChange = (text) => {
     setTextInput(text);
   };
 
-
-
   const handleTextToSpeech = () => {
-    speak(text, { language: language === 'Eng' ? 'en' : 'ar' });
+    Tts.speak(textInput);
   };
+
 
   useEffect(() => {
     Voice.onSpeechError = onSpeechError;
@@ -41,15 +38,15 @@ export default function Text_AudioScreen({ route }) {
 
     return () => {
       Voice.destroy().then(Voice.removeAllListeners);
-    }
+    };
   }, []);
 
-  const startSpeechToText = async() => {
+  const startSpeechToText = async () => {
     Voice.start("ar-SA");
     setStarted(true);
   };
 
-  const stopSpeechToText = async() => {
+  const stopSpeechToText = async () => {
     await Voice.stop();
     setStarted(false);
   };
@@ -77,42 +74,37 @@ export default function Text_AudioScreen({ route }) {
           ? "Text to Speech / Speech to Text"
           : "النص إلى كلام / الكلام إلى نص"}
       </Text>
-      {language == "Eng" ? (
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Arabic Text"
-          value={textInput}
-          onChangeText={handleTextChange}
-          multiline={true}
-        />
-      ) : (
-        <TextInput
-          style={styles.inputArb}
-          placeholder="أكتب النص بالعربية"
-          value={textInput}
-          onChangeText={handleTextChange}
-          multiline={true}
-        />
-      )}
-      {/* {errorMessage ? (
-          <Text style={styles.errorText}>{errorMessage}</Text>
-        ) : null} */}
+      <TextInput
+        style={language === "Eng" ? styles.input : styles.inputArb}
+        placeholder={
+          language === "Eng" ? "Enter Arabic Text" : "أكتب النص بالعربية"
+        }
+        value={textInput}
+        onChangeText={handleTextChange}
+        multiline={true}
+      />
       <TouchableOpacity onPress={handleTextToSpeech} style={styles.button}>
         <Text style={styles.buttonText}>
           {language === "Eng" ? "Text to Speech" : "النص إلى كلام"}
         </Text>
       </TouchableOpacity>
-      {!started ?<TouchableOpacity onPress={startSpeechToText} style={styles.button}>
-        <Text style={styles.buttonText}>
-          {language === "Eng" ? "Start Speech to Text" : "الكلام إلى نص"}
-        </Text>
-      </TouchableOpacity> :undefined}
-      {started ?<TouchableOpacity onPress={stopSpeechToText} style={styles.button}>
-        <Text style={styles.buttonText}>
-          {language === "Eng" ? "Stop Speech to Text" : "الكلام إلى نص"}
-        </Text>
-      </TouchableOpacity> :undefined}
-      {spokenText.map((text, index) => <Text key={index}>{text}</Text>)}
+      {!started ? (
+        <TouchableOpacity onPress={startSpeechToText} style={styles.button}>
+          <Text style={styles.buttonText}>
+            {language === "Eng" ? "Start Speech to Text" : "الكلام إلى نص"}
+          </Text>
+        </TouchableOpacity>
+      ) : undefined}
+      {started ? (
+        <TouchableOpacity onPress={stopSpeechToText} style={styles.button}>
+          <Text style={styles.buttonText}>
+            {language === "Eng" ? "Stop Speech to Text" : "الكلام إلى نص"}
+          </Text>
+        </TouchableOpacity>
+      ) : undefined}
+      {spokenText.map((text, index) => (
+        <Text key={index}>{text}</Text>
+      ))}
     </View>
   );
 }
@@ -142,14 +134,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
   },
-  // input: {
-  //   backgroundColor: "white",
-  //   paddingHorizontal: 15,
-  //   paddingVertical: 10,
-  //   borderRadius: 10,
-  //   marginBottom: 20,
-  //   width: "100%",
-  // },
   input: {
     height: 100,
     width: "100%",
