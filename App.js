@@ -22,8 +22,7 @@ export default function App() {
         initialRouteName="Onboarding"
         screenOptions={{
           headerStyle: {
-            backgroundColor: "orange",
-            color: "white", // Set header background color based on language
+            backgroundColor: "orange", // Set header background color based on language
           },
         }}
       >
