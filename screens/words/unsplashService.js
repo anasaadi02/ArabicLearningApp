@@ -15,6 +15,7 @@ export const fetchImage = async (query) => {
       params: { query, per_page: 1 },
     });
     const imageUrl = response.data.results[0]?.urls?.small;
+    // console.log(imageUrl);
     return imageUrl;
   } catch (error) {
     console.error("Error fetching image:", error);

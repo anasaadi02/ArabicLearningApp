@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import * as Speech from "expo-speech";
 import {
   View,
   Text,
@@ -6,6 +7,7 @@ import {
   StyleSheet,
   FlatList,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import { fetchImage } from "./unsplashService";
 import wordsData from "./words";
@@ -31,17 +33,33 @@ export default function DisplayScreen({ route }) {
     loadImages();
   }, [letter]);
 
+  const handleImageClick = async (word) => {
+    try {
+      console.log(word.word);
+      await Speech.speak(word.word, {
+        language: "ar", // Specify the language (Arabic)
+      });
+    } catch (error) {
+      console.error("Error speaking word:", error);
+    }
+  };
+
   const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
-      {loading ? (
-        <ActivityIndicator size="large" color="orange" />
-      ) : (
-        <>
-          <Image source={{ uri: images[item.meaning] }} style={styles.image} />
-          <Text style={styles.wordText}>{item.word}</Text>
-        </>
-      )}
-    </View>
+    <TouchableOpacity onPress={() => handleImageClick(item)}>
+      <View style={styles.itemContainer}>
+        {loading ? (
+          <ActivityIndicator size="large" color="orange" />
+        ) : (
+          <>
+            <Image
+              source={{ uri: images[item.meaning] }}
+              style={styles.image}
+            />
+            <Text style={styles.wordText}>{item.word}</Text>
+          </>
+        )}
+      </View>
+    </TouchableOpacity>
   );
 
   return (
