@@ -92,14 +92,14 @@ export default function HomeScreen({ route }) {
             {language == "Eng" ? "Translation" : "الترجمة"}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => TextToImgScreen()}
           style={[styles.button]}
         >
           <Text style={styles.buttonText}>
             {language == "Eng" ? "Images" : "الصور"}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity onPress={goToTextAudioScreen} style={[styles.button]}>
           <Text style={styles.buttonText}>
             {language == "Eng" ? "Audios" : "الصوتيات"}

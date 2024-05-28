@@ -27,6 +27,7 @@
     "dotenv": "^16.0.3",
     "expo": "~48.0.15",
     "expo-av": "~13.2.1",
+    "expo-blur": "~12.2.2",
     "expo-constants": "~14.2.1",
     "expo-dev-client": "~2.2.1",
     "expo-file-system": "~15.2.2",

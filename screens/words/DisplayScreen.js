@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
+
 import { fetchImage } from "./unsplashService";
 import wordsData from "./words";
 
@@ -35,7 +36,7 @@ export default function DisplayScreen({ route }) {
 
   const handleImageClick = async (word) => {
     try {
-      console.log(word.word);
+      //   console.log(word.word);
       await Speech.speak(word.word, {
         language: "ar", // Specify the language (Arabic)
       });
@@ -65,6 +66,7 @@ export default function DisplayScreen({ route }) {
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Words for "{letter}"</Text>
+
       <FlatList
         data={words}
         renderItem={renderItem}
@@ -80,6 +82,10 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: "#fff",
   },
+  //   blurOverlay: {
+  //     ...StyleSheet.absoluteFillObject,
+  //     backgroundColor: "rgba(255, 255, 255, 0.1)", // Adjust the opacity as needed
+  //   },
   headerText: {
     fontSize: 24,
     fontWeight: "bold",
