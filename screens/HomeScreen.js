@@ -51,7 +51,7 @@ export default function HomeScreen({ route }) {
 
   return (
     <ScrollView style={styles.Scroll}>
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <KeyboardAvoidingView style={styles.container}>
         <View
           style={{
             display: "flex",
@@ -87,10 +87,7 @@ export default function HomeScreen({ route }) {
             {language == "Eng" ? "Lettres" : "الحروف"}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={goToTranslationScreen}
-        >
+        <TouchableOpacity style={styles.button} onPress={goToTranslationScreen}>
           <Text style={styles.buttonText}>
             {language == "Eng" ? "Translation" : "الترجمة"}
           </Text>
@@ -140,7 +137,8 @@ export default function HomeScreen({ route }) {
 
 const styles = StyleSheet.create({
   Scroll: {
-    // marginBottom: -300,
+    // height: 100,
+    flex: 1,
   },
   switchlang: {
     fontWeight: "700",
@@ -236,20 +234,20 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
 
-  datepicker: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "flex-start",
-  },
+  // datepicker: {
+  //   flexDirection: "row",
+  //   flexWrap: "wrap",
+  //   alignItems: "flex-start",
+  // },
 
-  dateNTime: {
-    backgroundColor: "orange",
-    marginLeft: 7,
-    marginRight: 7,
-    height: 40,
-    width: "45%",
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  // dateNTime: {
+  //   backgroundColor: "orange",
+  //   marginLeft: 7,
+  //   marginRight: 7,
+  //   height: 40,
+  //   width: "45%",
+  //   borderRadius: 10,
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  // },
 });

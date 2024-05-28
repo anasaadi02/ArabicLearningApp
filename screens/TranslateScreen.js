@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -13,6 +13,7 @@ export default function TranslationScreen({ route }) {
   const [textInput, setTextInput] = useState("");
   const [translatedText, setTranslatedText] = useState("");
   const [started, setStarted] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const switchLangtoArb = () => {
     if (language === "Eng") setLanguage("Arb");
@@ -28,18 +29,25 @@ export default function TranslationScreen({ route }) {
 
   const handleTranslate = async () => {
     try {
-      const response = await axios.post(
-        `https://translation.googleapis.com/language/translate/v2`,
-        {},
-        {
-          params: {
-            q: textInput,
-            target: "ar",
-            key: "AIzaSyDwkC7jy1qDRhqcyOJ8_85-4sxtdvfgI_o",
-          },
-        }
-      );
-      setTranslatedText(response.data.data.translations[0].translatedText);
+      if (textInput == "") {
+        setErrorMessage(
+          language === "Eng" ? "Please enter a text" : "المرجو كتابة نص."
+        );
+      } else {
+        setErrorMessage("");
+        const response = await axios.post(
+          `https://translation.googleapis.com/language/translate/v2`,
+          {},
+          {
+            params: {
+              q: textInput,
+              target: "ar",
+              key: "AIzaSyDwkC7jy1qDRhqcyOJ8_85-4sxtdvfgI_o",
+            },
+          }
+        );
+        setTranslatedText(response.data.data.translations[0].translatedText);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -69,11 +77,15 @@ export default function TranslationScreen({ route }) {
         onChangeText={handleTextChange}
         multiline={true}
       />
+      {errorMessage ? (
+        <Text style={styles.errorText}>{errorMessage}</Text>
+      ) : null}
       <TouchableOpacity onPress={handleTranslate} style={styles.button}>
         <Text style={styles.buttonText}>
           {language === "Eng" ? "Translate" : "ترجمة"}
         </Text>
       </TouchableOpacity>
+
       {translatedText ? (
         <Text style={styles.resultText}>{translatedText}</Text>
       ) : null}
@@ -126,6 +138,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "white",
     textAlign: "right",
+  },
+  errorText: {
+    color: "red",
+    marginTop: 2,
+    top: -8,
   },
   button: {
     backgroundColor: "orange",

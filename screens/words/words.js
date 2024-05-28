@@ -165,7 +165,7 @@ const wordsData = {
     { word: "يد", meaning: "Hand" },
     { word: "يقطين", meaning: "Pumpkin" },
     { word: "يمامة", meaning: "Pigeon" },
-    { word: "يوسف", meaning: "Joseph" },
+    { word: "يرقة", meaning: "Larva" },
   ],
 };
 
