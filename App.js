@@ -10,9 +10,10 @@ import TextToImgScreen from "./screens/TextToImgScreen";
 import LettersScreen from "./screens/words/LettersScreen";
 import Text_AudioScreen from "./screens/Text_AudioScreen";
 import Onboarding from "./screens/Onboarding";
-import QuizzScreen from "./screens/QuizzScreen";
+import QuizSelectionScreen from "./screens/QuizSelectionScreen";
 import TranslationScreen from "./screens/TranslateScreen";
 import DisplayScreen from "./screens/words/DisplayScreen";
+import QuizScreen from "./screens/QuizScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -62,9 +63,10 @@ export default function App() {
           name="Letters"
           component={LettersScreen}
         />
+        <Stack.Screen name="QuizScreen" component={QuizScreen} options={{ title: 'Quiz' }} />
         <Stack.Screen name="Display" component={DisplayScreen} />
         <Stack.Screen name="Text_Audio" component={Text_AudioScreen} />
-        <Stack.Screen name="Quizz" component={QuizzScreen} />
+        <Stack.Screen name="Quizz" component={QuizSelectionScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
