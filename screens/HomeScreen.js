@@ -6,7 +6,12 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
+  Modal,
+  Image,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { BlurView } from "expo-blur";
+import RobotSpinner from "./utils/robot";
 import { useNavigation } from "@react-navigation/native";
 import CustomAlert from "./CustomAlert";
 
@@ -14,6 +19,15 @@ export default function HomeScreen({ route }) {
   const [language, setLanguage] = useState(route.params.language);
   const [openAlert, setOpenAlert] = useState(false);
   const navigation = useNavigation();
+  const [overlayVisible, setOverlayVisible] = useState(false);
+
+  const handleSpinnerClick = () => {
+    setOverlayVisible(true);
+  };
+
+  const handleCloseOverlay = () => {
+    setOverlayVisible(false);
+  };
 
   const switchLangtoArb = () => {
     if (language === "Eng") setLanguage("Arb");
@@ -48,10 +62,37 @@ export default function HomeScreen({ route }) {
   function QuizzScreen() {
     navigation.navigate("Quizz", { language });
   }
+  const CustomHeader = () => {
+    return (
+      <View style={styles.headerContainer}>
+        <LinearGradient
+          colors={["orange", "yellow"]} // Adjust gradient colors as needed
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.gradient}
+        />
+        <Image
+          source={require("../assets/robot.png")} // Provide the path to your robot image
+          style={styles.robotImage}
+        />
+        <Text style={styles.chatbotText}>
+          {" "}
+          {language == "Eng" ? "Chat bot" : "بوت الدردشة"}
+        </Text>
+      </View>
+    );
+  };
+  // function renderItem() {
+  //   return <RobotSpinner imageSource={require("../assets/robot.png")} />;
+  // }
+  // renderItem();
 
   return (
     <ScrollView style={styles.Scroll}>
       <KeyboardAvoidingView style={styles.container}>
+        <TouchableOpacity style={styles.customHeader}>
+          <CustomHeader />
+        </TouchableOpacity>
         <View
           style={{
             display: "flex",
@@ -79,6 +120,22 @@ export default function HomeScreen({ route }) {
               : "إختر احد الإختيارات للإستكمال التعلم  "}
           </Text>
         </View>
+        {/* <RobotSpinner onPress={handleSpinnerClick} /> */}
+        {/* {overlayVisible && (
+          <View style={styles.overlayContainer}>
+            <BlurView intensity={100} style={styles.blurView}>
+              <View style={styles.overlayContent}>
+                <Text style={styles.overlayText}>Hello, chat with me</Text>
+                <TouchableOpacity
+                  onPress={handleCloseOverlay}
+                  style={styles.closeButton}
+                >
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              </View>
+            </BlurView>
+          </View>
+        )} */}
         <TouchableOpacity
           style={[styles.button, { marginTop: 100 }]}
           onPress={() => GoToLettersScreen()}
@@ -140,6 +197,10 @@ const styles = StyleSheet.create({
     // height: 100,
     flex: 1,
   },
+  fixedSpinner: {
+    position: "absolute",
+    flex: 1,
+  },
   switchlang: {
     fontWeight: "700",
     fontSize: 16,
@@ -171,6 +232,32 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 10,
     top: 50,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    left: 225,
+    // borderRadius: 20,
+  },
+  gradient: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: -1,
+    borderRadius: 10,
+  },
+  robotImage: {
+    width: 50,
+    height: 50,
+    marginRight: 8,
+  },
+  chatbotText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "white",
   },
 
   radioContainer: {
@@ -232,6 +319,35 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderColor: "white",
     borderWidth: 2,
+  },
+
+  overlayContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  blurView: {
+    width: "80%",
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  overlayContent: {
+    padding: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  overlayText: {
+    fontSize: 24,
+    color: "white",
+    marginBottom: 20,
+  },
+  closeButton: {
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: "black",
   },
 
   // datepicker: {

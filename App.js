@@ -1,8 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import { Appearance, useColorScheme } from "react-native";
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { LinearGradient } from "expo-linear-gradient";
 import LoginScreen from "./screens/Register&Login/LoginScreen";
 import HomeScreen from "./screens/HomeScreen";
 import TicketScreen from "./screens/TicketScreen";
@@ -19,6 +20,23 @@ import QuizScreen from "./screens/QuizScreen";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  // const CustomHeader = () => {
+  //   return (
+  //     <View style={styles.headerContainer}>
+  //       <LinearGradient
+  //         colors={["orange", "yellow"]} // Adjust gradient colors as needed
+  //         start={{ x: 0, y: 0 }}
+  //         end={{ x: 1, y: 0 }}
+  //         style={styles.gradient}
+  //       />
+  //       <Image
+  //         source={require("./assets/robot.png")} // Provide the path to your robot image
+  //         style={styles.robotImage}
+  //       />
+  //       <Text style={styles.chatbotText}>Chatbot</Text>
+  //     </View>
+  //   );
+  // };
   return (
     <NavigationContainer initialRouteName="Onboarding">
       <Stack.Navigator
@@ -47,7 +65,16 @@ export default function App() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ animationEnabled: false }}
+          options={{
+            headerStyle: {
+              backgroundColor: "orange", // Set header background color for HomeScreen
+            },
+            // headerTitle: () => (
+            //   <View style={styles.customHeader}>
+            //     <CustomHeader />
+            //   </View>
+            // ),
+          }}
         />
         <Stack.Screen name="Images" component={TextToImgScreen} />
         <Stack.Screen
@@ -64,7 +91,11 @@ export default function App() {
           name="Letters"
           component={LettersScreen}
         />
-        <Stack.Screen name="QuizScreen" component={QuizScreen} options={{ title: 'Quiz' }} />
+        <Stack.Screen
+          name="QuizScreen"
+          component={QuizScreen}
+          options={{ title: "Quiz" }}
+        />
         <Stack.Screen name="Display" component={DisplayScreen} />
         <Stack.Screen name="Text_Audio" component={Text_AudioScreen} />
         <Stack.Screen name="Quizz" component={QuizSelectionScreen} />
@@ -82,6 +113,30 @@ const styles = StyleSheet.create({
   },
   stack: {
     backgroundColor: "orange",
+    color: "white",
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    left: 170,
+  },
+  gradient: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: -1,
+  },
+  robotImage: {
+    width: 30,
+    height: 30,
+    marginRight: 8,
+  },
+  chatbotText: {
+    fontSize: 18,
+    fontWeight: "bold",
     color: "white",
   },
 });

@@ -12,12 +12,39 @@ import axios from "axios";
 const transliterateArabic = (arabicText) => {
   // This is a placeholder. Replace with an actual transliteration method or API.
   const transliterationMap = {
-    "ا": "a", "ب": "b", "ت": "t", "ث": "th", "ج": "j", "ح": "h", "خ": "kh",
-    "د": "d", "ذ": "dh", "ر": "r", "ز": "z", "س": "s", "ش": "sh", "ص": "s",
-    "ض": "d", "ط": "t", "ظ": "dh", "ع": "a", "غ": "gh", "ف": "f", "ق": "q",
-    "ك": "k", "ل": "l", "م": "m", "ن": "n", "ه": "h", "و": "w", "ي": "y",
+    ا: "a",
+    ب: "b",
+    ت: "t",
+    ث: "th",
+    ج: "j",
+    ح: "h",
+    خ: "kh",
+    د: "d",
+    ذ: "dh",
+    ر: "r",
+    ز: "z",
+    س: "s",
+    ش: "sh",
+    ص: "s",
+    ض: "d",
+    ط: "t",
+    ظ: "dh",
+    ع: "a",
+    غ: "gh",
+    ف: "f",
+    ق: "q",
+    ك: "k",
+    ل: "l",
+    م: "m",
+    ن: "n",
+    ه: "h",
+    و: "w",
+    ي: "y",
   };
-  return arabicText.split("").map(char => transliterationMap[char] || char).join("");
+  return arabicText
+    .split("")
+    .map((char) => transliterationMap[char] || char)
+    .join("");
 };
 
 export default function TranslationScreen({ route }) {
@@ -28,11 +55,30 @@ export default function TranslationScreen({ route }) {
   const [errorMessage, setErrorMessage] = useState("");
 
   const switchLangtoArb = () => {
-    if (language === "Eng") setLanguage("Arb");
+    setLanguage("Arb");
+    setErrorMessage(
+      errorMessage === "Invalid email or password."
+        ? "بريد إلكتروني أو كلمة مرور غير صالحة."
+        : errorMessage === "Login failed. Please try again."
+        ? "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى في وقت لاحق."
+        : errorMessage === "Please verify your email before logging in."
+        ? "يرجى التحقق من بريدك الإلكتروني قبل تسجيل الدخول."
+        : ""
+    );
   };
 
   const switchLangtoEng = () => {
-    if (language === "Arb") setLanguage("Eng");
+    setLanguage("Eng");
+    setErrorMessage(
+      errorMessage === "بريد إلكتروني أو كلمة مرور غير صالحة."
+        ? "Invalid email or password."
+        : errorMessage ===
+          "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى في وقت لاحق."
+        ? "Login failed. Please try again."
+        : errorMessage === "يرجى التحقق من بريدك الإلكتروني قبل تسجيل الدخول."
+        ? "Please verify your email before logging in."
+        : ""
+    );
   };
 
   const handleTextChange = (text) => {
@@ -58,7 +104,8 @@ export default function TranslationScreen({ route }) {
             },
           }
         );
-        const translatedText = response.data.data.translations[0].translatedText;
+        const translatedText =
+          response.data.data.translations[0].translatedText;
         setTranslatedText(translatedText);
 
         // Transliterate the Arabic text to English letters
