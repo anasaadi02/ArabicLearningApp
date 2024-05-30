@@ -10,14 +10,15 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth, firestore } from "../../firebase"; // Ensure firestore is imported
 import { useNavigation } from "@react-navigation/native";
+import { setDoc, doc } from "firebase/firestore";
 
 export default function RegisterScreen({ route }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [language, setLanguage] = useState(route.params.language);
+  const [language, setLanguage] = useState(route.params.language || "Eng");
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigation = useNavigation();
@@ -37,7 +38,15 @@ export default function RegisterScreen({ route }) {
           email,
           password
         );
-        await sendEmailVerification(userCredential.user);
+        const user = userCredential.user;
+        await sendEmailVerification(user);
+
+        // Add user information to Firestore with an initial integer field
+        await setDoc(doc(firestore, "users", user.uid), {
+          email: user.email,
+          score: 0, // Initialize the integer field with 0
+        });
+
         navigation.navigate("Login", {
           language,
           message:
@@ -68,9 +77,10 @@ export default function RegisterScreen({ route }) {
                 ? "The password is too weak."
                 : "كلمة المرور ضعيفة جدًا."
             );
+            break;
           case "auth/network-request-failed":
             setErrorMessage(
-              language === "Eng" ? "network essue." : "مشكلة شبكة الانترنيت."
+              language === "Eng" ? "Network issue." : "مشكلة شبكة الانترنت."
             );
             break;
           default:
@@ -79,6 +89,7 @@ export default function RegisterScreen({ route }) {
                 ? "Registration failed. Please try again."
                 : "فشل التسجيل. يرجى المحاولة مرة أخرى."
             );
+            break; // Added missing break statement
         }
       }
     } else {
@@ -96,20 +107,12 @@ export default function RegisterScreen({ route }) {
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          position: "relative",
-          left: 150,
-          top: -100,
-        }}
-      >
+      <View style={styles.languageSwitchContainer}>
         <TouchableOpacity onPress={switchLangtoEng}>
-          <Text style={styles.switchlang}>Eng /</Text>
+          <Text style={styles.switchLang}>Eng /</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={switchLangtoArb}>
-          <Text style={styles.switchlang}>Arb</Text>
+          <Text style={styles.switchLang}>Arb</Text>
         </TouchableOpacity>
       </View>
       <Text style={styles.title}>
@@ -177,7 +180,7 @@ export default function RegisterScreen({ route }) {
         </TouchableOpacity>
         <Text style={styles.orText}>{language == "Eng" ? "or" : "أو"}</Text>
         <TouchableOpacity
-          onPress={() => handleLogin()}
+          onPress={handleLogin}
           style={[styles.button, styles.buttonOutline]}
         >
           <Text style={styles.buttonOutlineText}>
@@ -190,7 +193,7 @@ export default function RegisterScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
-  switchlang: {
+  switchLang: {
     fontWeight: "700",
     fontSize: 16,
     margin: 2,
@@ -262,5 +265,12 @@ const styles = StyleSheet.create({
     color: "orange",
     fontWeight: "700",
     fontSize: 16,
+  },
+  languageSwitchContainer: {
+    display: "flex",
+    flexDirection: "row",
+    position: "relative",
+    left: 150,
+    top: -100,
   },
 });
