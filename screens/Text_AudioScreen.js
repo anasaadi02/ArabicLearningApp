@@ -6,8 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import * as Speech from 'expo-speech';
-import { Audio } from 'expo-av';
+import * as Speech from "expo-speech";
+import { Audio } from "expo-av";
 
 export default function Text_AudioScreen({ route }) {
   const [language, setLanguage] = useState(route.params.language);
@@ -30,7 +30,9 @@ export default function Text_AudioScreen({ route }) {
   };
 
   const handleTextToSpeech = () => {
-    Speech.speak(textInput, { language: language === "Eng" ? "en-US" : "ar-SA" });
+    Speech.speak(textInput, {
+      language: language === "Eng" ? "en-US" : "ar-SA",
+    });
   };
 
   const startRecording = async () => {
@@ -40,14 +42,14 @@ export default function Text_AudioScreen({ route }) {
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
       });
-      
+
       const { recording } = await Audio.Recording.createAsync(
-         Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
       );
       setRecording(recording);
       setStarted(true);
     } catch (err) {
-      console.error('Failed to start recording', err);
+      console.error("Failed to start recording", err);
     }
   };
 
@@ -55,7 +57,7 @@ export default function Text_AudioScreen({ route }) {
     setRecording(undefined);
     await recording.stopAndUnloadAsync();
     const uri = recording.getURI();
-    console.log('Recording stopped and stored at', uri);
+    console.log("Recording stopped and stored at", uri);
     setStarted(false);
     await getTranscription(uri);
   };
@@ -63,17 +65,17 @@ export default function Text_AudioScreen({ route }) {
   const getTranscription = async (uri) => {
     try {
       const formData = new FormData();
-      formData.append('audio', {
+      formData.append("audio", {
         uri,
-        type: 'audio/x-wav',
-        name: 'recording.wav',
+        type: "audio/x-wav",
+        name: "recording.wav",
       });
 
-      const response = await fetch('http://your-server-address/transcribe', {
-        method: 'POST',
+      const response = await fetch("http://your-server-address/transcribe", {
+        method: "POST",
         body: formData,
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
 
@@ -81,7 +83,7 @@ export default function Text_AudioScreen({ route }) {
       setTranscription(transcription);
       setSpokenText([...spokenText, transcription]);
     } catch (err) {
-      console.error('Failed to get transcription', err);
+      console.error("Failed to get transcription", err);
     }
   };
 

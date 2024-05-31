@@ -16,6 +16,7 @@ import QuizSelectionScreen from "./screens/QuizSelectionScreen";
 import TranslationScreen from "./screens/TranslateScreen";
 import DisplayScreen from "./screens/words/DisplayScreen";
 import QuizScreen from "./screens/QuizScreen";
+import ChatScreen from "./screens/utils/chatbot";
 
 const Stack = createNativeStackNavigator();
 
@@ -52,6 +53,7 @@ export default function App() {
           name="Onboard"
           component={Onboarding}
         />
+
         <Stack.Screen
           options={{ headerShown: false }}
           name="Login"
@@ -69,12 +71,18 @@ export default function App() {
             headerStyle: {
               backgroundColor: "orange", // Set header background color for HomeScreen
             },
+
             // headerTitle: () => (
             //   <View style={styles.customHeader}>
             //     <CustomHeader />
             //   </View>
             // ),
           }}
+        />
+        <Stack.Screen
+          // options={{ headerShown: false }}
+          name="chatbot"
+          component={ChatScreen}
         />
         <Stack.Screen name="Images" component={TextToImgScreen} />
         <Stack.Screen

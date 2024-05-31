@@ -14,20 +14,12 @@ import { BlurView } from "expo-blur";
 import RobotSpinner from "./utils/robot";
 import { useNavigation } from "@react-navigation/native";
 import CustomAlert from "./CustomAlert";
+import ChatScreen from "./utils/chatbot";
 
 export default function HomeScreen({ route }) {
   const [language, setLanguage] = useState(route.params.language);
   const [openAlert, setOpenAlert] = useState(false);
   const navigation = useNavigation();
-  const [overlayVisible, setOverlayVisible] = useState(false);
-
-  const handleSpinnerClick = () => {
-    setOverlayVisible(true);
-  };
-
-  const handleCloseOverlay = () => {
-    setOverlayVisible(false);
-  };
 
   const switchLangtoArb = () => {
     if (language === "Eng") setLanguage("Arb");
@@ -62,36 +54,28 @@ export default function HomeScreen({ route }) {
   function QuizzScreen() {
     navigation.navigate("Quizz", { language });
   }
-  const CustomHeader = () => {
-    return (
-      <View style={styles.headerContainer}>
-        <LinearGradient
-          colors={["orange", "yellow"]} // Adjust gradient colors as needed
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.gradient}
-        />
-        <Image
-          source={require("../assets/robot.png")} // Provide the path to your robot image
-          style={styles.robotImage}
-        />
-        <Text style={styles.chatbotText}>
-          {" "}
-          {language == "Eng" ? "Chat bot" : "بوت الدردشة"}
-        </Text>
-      </View>
-    );
-  };
-  // function renderItem() {
-  //   return <RobotSpinner imageSource={require("../assets/robot.png")} />;
-  // }
-  // renderItem();
+  function gotochatbot() {
+    navigation.navigate("chatbot", { language });
+  }
 
   return (
     <ScrollView style={styles.Scroll}>
       <KeyboardAvoidingView style={styles.container}>
-        <TouchableOpacity style={styles.customHeader}>
-          <CustomHeader />
+        <TouchableOpacity style={styles.headerContainer} onPress={gotochatbot}>
+          <LinearGradient
+            colors={["orange", "yellow"]} // Adjust gradient colors as needed
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.gradient}
+          />
+          <Image
+            source={require("../assets/robot.png")} // Provide the path to your robot image
+            style={styles.robotImage}
+          />
+          <Text style={styles.chatbotText}>
+            {" "}
+            {language == "Eng" ? "Chat bot" : "بوت الدردشة"}
+          </Text>
         </TouchableOpacity>
         <View
           style={{
@@ -109,7 +93,9 @@ export default function HomeScreen({ route }) {
             <Text style={styles.switchlang}>Arb</Text>
           </TouchableOpacity>
         </View>
-
+        {/* <TouchableOpacity style={styles.customHeader} onPress={gotochatbot()}>
+          <CustomHeader />
+        </TouchableOpacity> */}
         <Text style={styles.head}>
           {language == "Eng" ? "Activities List" : "لائحة الأنشطة"}
         </Text>
@@ -234,10 +220,12 @@ const styles = StyleSheet.create({
     top: 50,
   },
   headerContainer: {
+    position: "absolute",
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
-    left: 225,
+    left: 120,
+    top: 2,
     // borderRadius: 20,
   },
   gradient: {
@@ -250,8 +238,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   robotImage: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     marginRight: 8,
   },
   chatbotText: {

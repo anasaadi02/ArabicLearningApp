@@ -1,3 +1,5 @@
+// const [translatedText, setTranslatedText] = useState("");
+
 const wordsData = {
   ا: [
     { word: "أسد", meaning: "Lion" },

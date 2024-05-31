@@ -1,6 +1,12 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  useState,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function Onboarding() {
