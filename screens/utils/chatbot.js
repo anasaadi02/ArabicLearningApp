@@ -77,28 +77,28 @@ const ChatScreen = ({ route }) => {
     setIsTyping(false);
     setUserInput("");
 
-    if (text && !isSpeaking) {
-      Speech.speak(text);
-      setIsSpeaking(true);
-      setShowStopIcon(true);
-    }
+    // if (text && !isSpeaking) {
+    //   Speech.speak(text);
+    //   setIsSpeaking(true);
+    //   setShowStopIcon(true);
+    // }
   };
 
-  const toggleSpeech = () => {
-    console.log("isSpeaking", isSpeaking);
-    if (isSpeaking) {
-      Speech.stop();
-      setIsSpeaking(false);
-    } else {
-      Speech.speak(messages[messages.length - 1].text);
-      setIsSpeaking(true);
-    }
-  };
+  // const toggleSpeech = () => {
+  //   console.log("isSpeaking", isSpeaking);
+  //   if (isSpeaking) {
+  //     Speech.stop();
+  //     setIsSpeaking(false);
+  //   } else {
+  //     Speech.speak(messages[messages.length - 1].text);
+  //     setIsSpeaking(true);
+  //   }
+  // };
 
-  const ClearMessage = () => {
-    setMessages([]);
-    setIsSpeaking(false);
-  };
+  // const ClearMessage = () => {
+  //   setMessages([]);
+  //   setIsSpeaking(false);
+  // };
 
   const renderMessage = ({ item }) => (
     <View
@@ -191,6 +191,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#ffff", marginTop: 50 },
   messageContainer: {
     // left: language == "Eng" ? null : 10,
+
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
@@ -216,7 +217,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "white",
   },
-  messageText: { fontSize: 16, marginLeft: 10 },
+  messageText: {
+    fontSize: 16,
+    marginLeft: 10,
+    backgroundColor: "#fbd68d",
+    borderRadius: 7,
+  },
   inputContainer: { flexDirection: "row", alignItems: "center", padding: 10 },
   input: {
     flex: 1,
