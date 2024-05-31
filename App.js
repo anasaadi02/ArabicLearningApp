@@ -12,10 +12,10 @@ import TextToImgScreen from "./screens/TextToImgScreen";
 import LettersScreen from "./screens/words/LettersScreen";
 import Text_AudioScreen from "./screens/Text_AudioScreen";
 import Onboarding from "./screens/Onboarding";
-import QuizSelectionScreen from "./screens/QuizSelectionScreen";
+import QuizSelectionScreen from "./screens/quizzes/QuizSelectionScreen";
 import TranslationScreen from "./screens/TranslateScreen";
 import DisplayScreen from "./screens/words/DisplayScreen";
-import QuizScreen from "./screens/QuizScreen";
+import QuizScreen from "./screens/quizzes/QuizScreen";
 import ChatScreen from "./screens/utils/chatbot";
 
 const Stack = createNativeStackNavigator();

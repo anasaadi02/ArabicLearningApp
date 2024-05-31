@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { fetchImage } from './UnsplashQuiz';
 
 const quizzes = [
   {
@@ -33,6 +34,8 @@ const quizzes = [
   },
   {
     questions: [
+      { question: 'Guess the image:', options: ['مدرسة (madrasa)', 'مستشفى (mustashfa)', 'مكتبة (maktaba)', 'منزل (manzil)'], answer: 0, image: 'classroom' }, // Replace with actual image
+      { question: 'Guess the image:', options: ['شجرة (shajara)', 'زهرة (zahra)', 'سيارة (sayyara)', 'بيت (bayt)'], answer: 1, image: 'flower' }, // Replace with actual image
       { question: 'مَدرَسة (madrasa)', options: ['Hospital', 'Market', 'School', 'Library'], answer: 2 },
       { question: 'طِفْل (tifl)', options: ['Adult', 'Child', 'Teacher', 'Doctor'], answer: 1 },
       { question: 'سَيّارة (sayyara)', options: ['Bicycle', 'Airplane', 'Train', 'Car'], answer: 3 },
@@ -40,8 +43,6 @@ const quizzes = [
       { question: 'مِلعَقة (milʿaqa)', options: ['Spoon', 'Fork', 'Knife', 'Plate'], answer: 0 },
       { question: 'Complete the sentence: أنا أَكتُبُ بـ ____ (Ana aktubu bi ____)', options: ['كِتاب (kitab)', 'طاوِلة (taawila)', 'قَلَم (qalam)', 'باب (baab)'], answer: 2 },
       { question: 'Complete the sentence: الطالبُ في ____ (Al-talib fi ____)', options: ['المَدرَسة (almadrasah)', 'الحَديقة (alhadiqah)', 'الغُرفة (alghurfa)', 'المَطبَخ (almatbakh)'], answer: 0 },
-      { question: 'Guess the image:', options: ['مدرسة (madrasa)', 'مستشفى (mustashfa)', 'مكتبة (maktaba)', 'منزل (manzil)'], answer: 0 }, // Replace with actual image
-      { question: 'Guess the image:', options: ['شجرة (shajara)', 'زهرة (zahra)', 'سيارة (sayyara)', 'بيت (bayt)'], answer: 1 }, // Replace with actual image
       { question: 'Complete the sentence: الأستاذُ يُدَرِّس في ____ (Al-ustadh yudarris fi ____)', options: ['المَدرَسة (almadrasah)', 'السَيّارة (alsayyara)', 'المَطَار (almatar)', 'البَيت (albayt)'], answer: 0 },
     ],
   },
@@ -54,7 +55,7 @@ const quizzes = [
       { question: 'نافِذة (nafitha)', options: ['Door', 'Window', 'Wall', 'Roof'], answer: 1 },
       { question: 'Complete the sentence: أُحِبُّ أن أَكْتُب بـ ____ (Uhibbu an aktub bi ____)', options: ['القَلَم (alqalam)', 'الكُرسي (alkursi)', 'البَاب (albāb)', 'المَاء (almaa\')'], answer: 0 },
       { question: 'What is the Arabic word for "and"?', options: ['وَ (wa)', 'أَو (aw)', 'مِن (min)', 'إلى (ila)'], answer: 0 },
-      { question: 'Guess the image:', options: ['شجرة (shajara)', 'زهرة (zahra)', 'سيارة (sayyara)', 'بيت (bayt)'], answer: 2 }, // Replace with actual image
+      { question: 'Guess the image:', options: ['شجرة (shajara)', 'زهرة (zahra)', 'سيارة (sayyara)', 'بيت (bayt)'], answer: 2, image: 'car' }, // Replace with actual image
       { question: 'Complete the sentence: الطالبُ في ____ (Al-talib fi ____)', options: ['المَدرَسة (almadrasah)', 'الحَديقة (alhadiqah)', 'الغُرفة (alghurfa)', 'المَطبَخ (almatbakh)'], answer: 0 },
       { question: 'Guess the image:', options: ['دفتر (daftar)', 'كتاب (kitab)', 'قلم (qalam)', 'حاسوب (hasub)'], answer: 2 },
     ],
@@ -68,8 +69,8 @@ const quizzes = [
       { question: 'مَطبَخ (matbakh)', options: ['Bedroom', 'Kitchen', 'Bathroom', 'Living room'], answer: 1 },
       { question: 'Complete the sentence: أنا أَذْهَب إلى ____ (Ana adhhaba ila ____)', options: ['المدرسة (almadrasah)', 'المطار (almatar)', 'الحديقة (alhadiqah)', 'السوق (alsouq)'], answer: 2 },
       { question: 'Complete the sentence: أُحِبُّ أن أَكْتُب بـ ____ (Uhibbu an aktub bi ____)', options: ['القَلَم (alqalam)', 'الكُرسي (alkursi)', 'الباب (albāb)', 'المَاء (almaa\')'], answer: 0 },
-      { question: 'Guess the image:', options: ['دراجة (daraja)', 'طائرة (tayara)', 'سيارة (sayyara)', 'قطار (qitar)'], answer: 2 }, // Replace with actual image
-      { question: 'Guess the image:', options: ['قلم (qalam)', 'كتاب (kitab)', 'حاسوب (hasub)', 'دفتر (daftar)'], answer: 1 }, // Replace with actual image
+      { question: 'Guess the image:', options: ['دراجة (daraja)', 'طائرة (tayara)', 'سيارة (sayyara)', 'قطار (qitar)'], answer: 1, image: 'airplane' }, // Replace with actual image
+      { question: 'Guess the image:', options: ['قلم (qalam)', 'كتاب (kitab)', 'حاسوب (hasub)', 'دفتر (daftar)'], answer: 1, image: 'book' }, // Replace with actual image
       { question: 'Complete the sentence: الكتاب على ____ (Al-kitab ala ____)', options: ['الكُرسي (alkursi)', 'السَيّارة (alsayyara)', 'الطاولة (altaawila)', 'الباب (albab)'], answer: 3 },
     ],
   },
@@ -82,8 +83,8 @@ const quizzes = [
       { question: 'نافِذة (nafitha)', options: ['Door', 'Window', 'Wall', 'Roof'], answer: 1 },
       { question: 'Complete the sentence: أنا أَكتُبُ بـ ____ (Ana aktubu bi ____)', options: ['كِتاب (kitab)', 'طاوِلة (taawila)', 'قَلَم (qalam)', 'باب (baab)'], answer: 2 },
       { question: 'Complete the sentence: الأستاذُ يُدَرِّس في ____ (Al-ustadh yudarris fi ____)', options: ['المَدرَسة (almadrasah)', 'السَيّارة (alsayyara)', 'المَطَار (almatar)', 'البَيت (albayt)'], answer: 0 },
-      { question: 'Guess the image:', options: ['شجرة (shajara)', 'زهرة (zahra)', 'سيارة (sayyara)', 'بيت (bayt)'], answer: 2 }, // Replace with actual image
-      { question: 'Guess the image:', options: ['دفتر (daftar)', 'كتاب (kitab)', 'قلم (qalam)', 'حاسوب (hasub)'], answer: 2 }, // Replace with actual image
+      { question: 'Guess the image:', options: ['شجرة (shajara)', 'زهرة (zahra)', 'سيارة (sayyara)', 'بيت (bayt)'], answer: 3, image: 'house' }, // Replace with actual image
+      { question: 'Guess the image:', options: ['دفتر (daftar)', 'كتاب (kitab)', 'قلم (qalam)', 'حاسوب (hasub)'], answer: 2, image: 'pen' }, // Replace with actual image
       { question: 'Complete the sentence: الطالبُ في ____ (Al-talib fi ____)', options: ['المَدرَسة (almadrasah)', 'الحَديقة (alhadiqah)', 'الغُرفة (alghurfa)', 'المَطبَخ (almatbakh)'], answer: 0 },
     ],
   },
@@ -163,13 +164,34 @@ export default function QuizScreen({ route, navigation }) {
 
   const shuffledQuestions = shuffleArray(quiz.questions);
 
+  const [imageUrls, setImageUrls] = useState([]);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      const urls = await Promise.all(
+        shuffledQuestions.map(async (question, index) => {
+          if (question.question.startsWith('Guess the image')) {
+            const imageUrl = await fetchImage(question.image);
+            console.log(question.image);
+            return { index, imageUrl };
+          }
+          return null;
+        })
+      );
+      setImageUrls(urls.filter(Boolean));
+    };
+
+    fetchImages();
+  }, []);
+
+
   const handleAnswer = (selectedOption) => {
-    if (selectedOption === quiz.questions[currentQuestionIndex].answer) {
+    if (selectedOption === shuffledQuestions[currentQuestionIndex].answer) {
       setScore(score + 1);
     }
 
     const nextQuestionIndex = currentQuestionIndex + 1;
-    if (nextQuestionIndex < quiz.questions.length) {
+    if (nextQuestionIndex < shuffledQuestions.length) {
       setCurrentQuestionIndex(nextQuestionIndex);
     } else {
       setShowScore(true);
@@ -179,7 +201,7 @@ export default function QuizScreen({ route, navigation }) {
   if (showScore) {
     return (
       <View style={styles.container}>
-        <Text style={styles.scoreText}>Your score: {score} / {quiz.questions.length}</Text>
+        <Text style={styles.scoreText}>Your score: {score} / {shuffledQuestions.length}</Text>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
           <Text style={styles.buttonText}>Go Back</Text>
         </TouchableOpacity>
@@ -187,11 +209,13 @@ export default function QuizScreen({ route, navigation }) {
     );
   }
 
-  const currentQuestion = quiz.questions[currentQuestionIndex];
+  const currentQuestion = shuffledQuestions[currentQuestionIndex];
+  const currentImageUrl = imageUrls.find(({ index }) => index === currentQuestionIndex)?.imageUrl;
 
   return (
     <View style={styles.container}>
       <Text style={styles.questionText}>{currentQuestion.question}</Text>
+      {currentImageUrl && <Image source={{ uri: currentImageUrl }} style={{ width: 200, height: 200, marginBottom: 20 }} />}
       {currentQuestion.options.map((option, index) => (
         <TouchableOpacity key={index} style={styles.button} onPress={() => handleAnswer(index)}>
           <Text style={styles.buttonText}>{option}</Text>
