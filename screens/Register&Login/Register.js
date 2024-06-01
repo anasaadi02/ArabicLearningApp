@@ -44,7 +44,7 @@ export default function RegisterScreen({ route }) {
         // Add user information to Firestore with an initial integer field
         await setDoc(doc(firestore, "users", user.uid), {
           email: user.email,
-          score: 0, // Initialize the integer field with 0
+          score: 1, // Initialize the integer field with 0
         });
 
         navigation.navigate("Login", {

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { fetchImage } from './UnsplashQuiz';
+import { getAuth } from "firebase/auth";
+import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 
 const quizzes = [
   {
@@ -57,7 +59,7 @@ const quizzes = [
       { question: 'What is the Arabic word for "and"?', options: ['وَ (wa)', 'أَو (aw)', 'مِن (min)', 'إلى (ila)'], answer: 0 },
       { question: 'Guess the image:', options: ['شجرة (shajara)', 'زهرة (zahra)', 'سيارة (sayyara)', 'بيت (bayt)'], answer: 2, image: 'car' }, // Replace with actual image
       { question: 'Complete the sentence: الطالبُ في ____ (Al-talib fi ____)', options: ['المَدرَسة (almadrasah)', 'الحَديقة (alhadiqah)', 'الغُرفة (alghurfa)', 'المَطبَخ (almatbakh)'], answer: 0 },
-      { question: 'Guess the image:', options: ['دفتر (daftar)', 'كتاب (kitab)', 'قلم (qalam)', 'حاسوب (hasub)'], answer: 2 },
+      { question: 'Guess the image:', options: ['دفتر (daftar)', 'كتاب (kitab)', 'قلم (qalam)', 'حاسوب (hasub)'], answer: 2, image: 'pen' },
     ],
   },
   {
@@ -84,7 +86,7 @@ const quizzes = [
       { question: 'Complete the sentence: أنا أَكتُبُ بـ ____ (Ana aktubu bi ____)', options: ['كِتاب (kitab)', 'طاوِلة (taawila)', 'قَلَم (qalam)', 'باب (baab)'], answer: 2 },
       { question: 'Complete the sentence: الأستاذُ يُدَرِّس في ____ (Al-ustadh yudarris fi ____)', options: ['المَدرَسة (almadrasah)', 'السَيّارة (alsayyara)', 'المَطَار (almatar)', 'البَيت (albayt)'], answer: 0 },
       { question: 'Guess the image:', options: ['شجرة (shajara)', 'زهرة (zahra)', 'سيارة (sayyara)', 'بيت (bayt)'], answer: 3, image: 'house' }, // Replace with actual image
-      { question: 'Guess the image:', options: ['دفتر (daftar)', 'كتاب (kitab)', 'قلم (qalam)', 'حاسوب (hasub)'], answer: 2, image: 'pen' }, // Replace with actual image
+      { question: 'Guess the image:', options: ['دفتر (daftar)', 'كتاب (kitab)', 'قلم (qalam)', 'حاسوب (hasub)'], answer: 3, image: 'laptop' }, // Replace with actual image
       { question: 'Complete the sentence: الطالبُ في ____ (Al-talib fi ____)', options: ['المَدرَسة (almadrasah)', 'الحَديقة (alhadiqah)', 'الغُرفة (alghurfa)', 'المَطبَخ (almatbakh)'], answer: 0 },
     ],
   },
@@ -156,11 +158,36 @@ const shuffleArray = (array) => {
 };
 
 export default function QuizScreen({ route, navigation }) {
-  const { quizNumber } = route.params;
-  const quiz = quizzes[quizNumber - 1]; // Adjusting index for array access
+  const { quizId } = route.params;
+  const quiz = quizzes[quizId - 1]; // Adjusting index for array access
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
+
+  const [userScore, setUserScore] = useState(0);
+  const firestore = getFirestore();
+  const auth = getAuth();
+  useEffect(() => {
+    const getUserScore = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          const userDoc = await getDoc(doc(firestore, "users", user.uid));
+          if (userDoc.exists()) {
+            setUserScore(userDoc.data().score);
+          } else {
+            console.error("No such document!");
+          }
+        } catch (error) {
+          console.error("Error getting user score:", error);
+        }
+      } else {
+        console.error("No user is signed in");
+      }
+    };
+
+    getUserScore();
+  }, []);
 
   const shuffledQuestions = shuffleArray(quiz.questions);
 
@@ -199,10 +226,30 @@ export default function QuizScreen({ route, navigation }) {
   };
 
   if (showScore) {
+    if (score == 10) {
+      if (userScore <= quizId) {
+        const newScore = userScore + 1;
+        const user = auth.currentUser;
+        if (user) {
+          const userRef = doc(firestore, "users", user.uid);
+          try {
+            updateDoc(userRef, { score: newScore });
+            console.log("Score updated successfully");
+            setUserScore(newScore); // Update the local state with the new score
+          } catch (error) {
+            console.error("Error updating score:", error);
+          }
+        } else {
+          console.error("No user is signed in");
+        }
+      };
+
+      }
+
     return (
       <View style={styles.container}>
         <Text style={styles.scoreText}>Your score: {score} / {shuffledQuestions.length}</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")} style={styles.button}>
           <Text style={styles.buttonText}>Go Back</Text>
         </TouchableOpacity>
       </View>
