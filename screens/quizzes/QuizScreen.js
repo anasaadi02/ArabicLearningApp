@@ -69,11 +69,11 @@ const quizzes = [
       { question: 'شَمس (shams)', options: ['Moon', 'Star', 'Sun', 'Sky'], answer: 2 },
       { question: 'غُرفة (ghurfa)', options: ['Kitchen', 'Room', 'Bathroom', 'Garden'], answer: 1 },
       { question: 'مَطبَخ (matbakh)', options: ['Bedroom', 'Kitchen', 'Bathroom', 'Living room'], answer: 1 },
-      { question: 'Complete the sentence: أنا أَذْهَب إلى ____ (Ana adhhaba ila ____)', options: ['المدرسة (almadrasah)', 'المطار (almatar)', 'الحديقة (alhadiqah)', 'السوق (alsouq)'], answer: 2 },
+      { question: 'Complete the sentence: الأستاذُ ذهَب إلى ____ (Al-ustadh dahaba ila ____)', options: ['المدرسة (almadrasah)', 'المطار (almatar)', 'الحديقة (alhadiqah)', 'السوق (alsouq)'], answer: 0 },
       { question: 'Complete the sentence: أُحِبُّ أن أَكْتُب بـ ____ (Uhibbu an aktub bi ____)', options: ['القَلَم (alqalam)', 'الكُرسي (alkursi)', 'الباب (albāb)', 'المَاء (almaa\')'], answer: 0 },
       { question: 'Guess the image:', options: ['دراجة (daraja)', 'طائرة (tayara)', 'سيارة (sayyara)', 'قطار (qitar)'], answer: 1, image: 'airplane' }, // Replace with actual image
       { question: 'Guess the image:', options: ['قلم (qalam)', 'كتاب (kitab)', 'حاسوب (hasub)', 'دفتر (daftar)'], answer: 1, image: 'book' }, // Replace with actual image
-      { question: 'Complete the sentence: الكتاب على ____ (Al-kitab ala ____)', options: ['الكُرسي (alkursi)', 'السَيّارة (alsayyara)', 'الطاولة (altaawila)', 'الباب (albab)'], answer: 3 },
+      { question: 'Complete the sentence: الكتاب على ____ (Al-kitab ala ____)', options: ['الكُرسي (alkursi)', 'السَيّارة (alsayyara)', 'الطاولة (altaawila)', 'الباب (albab)'], answer: 2 },
     ],
   },
   {
@@ -189,14 +189,14 @@ export default function QuizScreen({ route, navigation }) {
     getUserScore();
   }, []);
 
-  const shuffledQuestions = shuffleArray(quiz.questions);
+
 
   const [imageUrls, setImageUrls] = useState([]);
 
   useEffect(() => {
     const fetchImages = async () => {
       const urls = await Promise.all(
-        shuffledQuestions.map(async (question, index) => {
+        quiz.questions.map(async (question, index) => {
           if (question.question.startsWith('Guess the image')) {
             const imageUrl = await fetchImage(question.image);
             console.log(question.image);
@@ -213,12 +213,12 @@ export default function QuizScreen({ route, navigation }) {
 
 
   const handleAnswer = (selectedOption) => {
-    if (selectedOption === shuffledQuestions[currentQuestionIndex].answer) {
+    if (selectedOption === quiz.questions[currentQuestionIndex].answer) {
       setScore(score + 1);
     }
 
     const nextQuestionIndex = currentQuestionIndex + 1;
-    if (nextQuestionIndex < shuffledQuestions.length) {
+    if (nextQuestionIndex < quiz.questions.length) {
       setCurrentQuestionIndex(nextQuestionIndex);
     } else {
       setShowScore(true);
@@ -248,15 +248,15 @@ export default function QuizScreen({ route, navigation }) {
 
     return (
       <View style={styles.container}>
-        <Text style={styles.scoreText}>Your score: {score} / {shuffledQuestions.length}</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")} style={styles.button}>
+        <Text style={styles.scoreText}>Your score: {score} / {quiz.questions.length}</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Home", "Eng")} style={styles.button}>
           <Text style={styles.buttonText}>Go Back</Text>
         </TouchableOpacity>
       </View>
     );
   }
 
-  const currentQuestion = shuffledQuestions[currentQuestionIndex];
+  const currentQuestion = quiz.questions[currentQuestionIndex];
   const currentImageUrl = imageUrls.find(({ index }) => index === currentQuestionIndex)?.imageUrl;
 
   return (

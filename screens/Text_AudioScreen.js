@@ -99,8 +99,8 @@ export default function Text_AudioScreen({ route }) {
       </View>
       <Text style={styles.head}>
         {language === "Eng"
-          ? "Text to Speech / Speech to Text"
-          : "النص إلى كلام / الكلام إلى نص"}
+          ? "Text to Speech"
+          : "النص إلى كلام "}
       </Text>
       <TextInput
         style={language === "Eng" ? styles.input : styles.inputArb}
@@ -116,20 +116,6 @@ export default function Text_AudioScreen({ route }) {
           {language === "Eng" ? "Text to Speech" : "النص إلى كلام"}
         </Text>
       </TouchableOpacity>
-      {!started ? (
-        <TouchableOpacity onPress={startRecording} style={styles.button}>
-          <Text style={styles.buttonText}>
-            {language === "Eng" ? "Start Speech to Text" : "ابدأ الكلام إلى نص"}
-          </Text>
-        </TouchableOpacity>
-      ) : undefined}
-      {started ? (
-        <TouchableOpacity onPress={stopRecording} style={styles.button}>
-          <Text style={styles.buttonText}>
-            {language === "Eng" ? "Stop Speech to Text" : "أوقف الكلام إلى نص"}
-          </Text>
-        </TouchableOpacity>
-      ) : undefined}
       {spokenText.map((text, index) => (
         <Text key={index}>{text}</Text>
       ))}

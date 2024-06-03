@@ -150,7 +150,7 @@ export default function HomeScreen({ route }) {
         </TouchableOpacity>
         <TouchableOpacity onPress={QuizzScreen} style={[styles.button]}>
           <Text style={styles.buttonText}>
-            {language == "Eng" ? "Quizz" : "إختبارات"}
+            Quiz
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
