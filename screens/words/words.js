@@ -1,8 +1,42 @@
 // const [translatedText, setTranslatedText] = useState("");
 
+// import * as GoogleGenerativeAI from "@google/generative-ai";
+
+// const API_KEY = "AIzaSyBniqya5Recf3KlH3__fihuMuAoVFxgl0E";
+
+// const startChat = async (letter) => {
+//   const genAI = new GoogleGenerativeAI.GoogleGenerativeAI(API_KEY);
+//   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+//   const prompt = "${letter} أريد كلمة تبدأ بحرف";
+//   const result = await model.generateContent(prompt);
+//   const response = result.response;
+//   const text = response.text();
+//   console.log(text);
+//   return text;
+// };
+
+// const fetchWord = async (letter) => {
+//   startChat(letter);
+//   // setTranslatedText(word);
+// };
+
+// const Givetranslation = async (word) => {
+//   const genAI = new GoogleGenerativeAI.GoogleGenerativeAI(API_KEY);
+//   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+//   const prompt = "give me translation of ${word} into arabic";
+//   const result = await model.generateContent(prompt);
+//   const response = result.response;
+//   const text = response.text();
+//   console.log(text);
+//   return text;
+// };
+
 const wordsData = {
   ا: [
-    { word: "أسد", meaning: "Lion" },
+    {
+      word: "أسد",
+      meaning: "Lion",
+    },
     { word: "أرنب", meaning: "Rabbit" },
     { word: "أم", meaning: "Mother" },
     { word: "أب", meaning: "Father" },

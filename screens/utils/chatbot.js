@@ -222,6 +222,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     backgroundColor: "#fbd68d",
     borderRadius: 7,
+    right: 7,
   },
   inputContainer: { flexDirection: "row", alignItems: "center", padding: 10 },
   input: {

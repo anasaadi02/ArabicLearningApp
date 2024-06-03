@@ -39,14 +39,16 @@ export default function Onboarding() {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: "white",
-    height: 100,
-    width: 100,
+    height: 80,
+    width: 80,
     padding: 15,
     borderRadius: 100,
     alignItems: "center",
     justifyContent: "center", // Center the text within the button
     position: "relative",
     top: 50,
+    borderColor: "red",
+    borderWidth: 2,
   },
   buttonText: {
     color: "orange",
