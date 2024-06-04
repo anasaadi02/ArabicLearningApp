@@ -10,7 +10,7 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-import { auth, firestore } from "../../firebase"; // Ensure firestore is imported
+import { auth, firestore } from "../../firebase";
 import { useNavigation } from "@react-navigation/native";
 import { setDoc, doc } from "firebase/firestore";
 
